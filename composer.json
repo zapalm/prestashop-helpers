@@ -1,0 +1,32 @@
+{
+  "name": "zapalm/prestashopHelpers",
+  "type": "library",
+  "description": "Helper classes for Prestashop CMS.",
+  "keywords": [
+    "prestashop",
+    "helpers"
+  ],
+  "homepage": "https://github.com/zapalm/prestashopHelpers",
+  "license": "MIT",
+  "authors": [
+    {
+      "name": "Maksim T.",
+      "email": "zapalm@yandex.com",
+      "role": "Developer"
+    }
+  ],
+  "minimum-stability": "dev",
+  "require": {
+    "php": ">=5.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "zapalm\\prestashopHelpers\\": ""
+    }
+  },
+  "config": {
+    "platform": {
+      "php": "5.4"
+    }
+  }
+}

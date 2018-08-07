@@ -1,6 +1,7 @@
 # Helper classes for PrestaShop CMS
 Full documented helper classes for PrestaShop CMS.
 With these helpers some programming tasks becomes more simple and done faster.
+[The library homepage][5].
 
 # Examples
 
@@ -118,3 +119,4 @@ Contributors wishing to edit the project's files should follow the following pro
 [2]: https://www.patreon.com/zapalm
 [3]: https://prestashop.modulez.ru/en/contact-us
 [4]: https://help.github.com/articles/about-pull-requests/
+[5]: https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html

@@ -37,7 +37,7 @@ class FormHelper extends \HelperForm
      * //     ['id' => '345', 'name' => 'def']
      * // ]
      *
-     * The usage in a form definition:
+     * // The usage in a form definition:
      * array(
      *     'type'    => 'select',
      *     'label'   => 'Example',

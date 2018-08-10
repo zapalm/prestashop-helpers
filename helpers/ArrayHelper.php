@@ -6,7 +6,7 @@
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
  * @link      https://github.com/zapalm/prestashopHelpers GitHub
- * @link      https://prestashop.modulez.ru/en/contact-us Contact form
+ * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
 namespace zapalm\prestashopHelpers\helpers;

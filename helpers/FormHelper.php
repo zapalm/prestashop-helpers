@@ -14,12 +14,76 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Form helper.
  *
- * @version 0.1.0
+ * @version 0.3.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class FormHelper extends \HelperForm
 {
+    /**
+     * Generates an appropriate input name for the specified attribute name.
+     *
+     *
+     * For example,
+     *
+     * ~~~
+     * FormHelper::getInputName(Manufacturer::class, 'description', 1);
+     * // The result is: Manufacturer_description_1
+     * ~~~
+     *
+     * @param string   $formName      The form name or empty string.
+     * @param string   $attributeName The attribute name.
+     * @param int|null $idLanguage    The language ID for multi-language input or null.
+     *
+     * @return string The generated input name.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getInputName($formName, $attributeName, $idLanguage = null)
+    {
+        if ('' === trim($attributeName)) {
+            throw new \InvalidArgumentException('The attribute name is empty.');
+        }
+
+        return implode('_', array_filter([
+            $formName,
+            $attributeName,
+            $idLanguage,
+        ]));
+    }
+
+    /**
+     * Generates an appropriate input ID for the specified attribute name.
+     *
+     * For example,
+     *
+     * ~~~
+     * FormHelper::getInputId(Manufacturer::class, 'description', 1);
+     * // The result is: manufacturer-description-1
+     * ~~~
+     *
+     * @param string   $formName      The form name or empty string.
+     * @param string   $attributeName The attribute name.
+     * @param int|null $idLanguage    The language ID for multi-language input or null.
+     *
+     * @return string The generated input ID.
+     *
+     * @throws \InvalidArgumentException
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getInputId($formName, $attributeName, $idLanguage = null)
+    {
+        $id = strtolower(static::getInputName($formName, $attributeName, $idLanguage));
+        $id = str_replace(['[]', '][', '[', ']', ' ', '.'], ['', '-', '-', '', '-', '-'], $id);
+        $id = preg_replace('/_+/', '-', $id);
+        $id = trim($id, '-');
+
+        return $id;
+    }
+
     /**
      * Generates the list used by the helper.
      *

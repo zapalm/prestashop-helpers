@@ -55,28 +55,24 @@ class FormHelper extends \HelperForm
     }
 
     /**
-     * Generates an appropriate input ID for the specified attribute name.
+     * Generates an appropriate input ID by the specified input name.
      *
      * For example,
      *
      * ~~~
-     * FormHelper::getInputId(Manufacturer::class, 'description', 1);
+     * FormHelper::getInputIdByName(FormHelper::getInputName(Manufacturer::class, 'description', 1));
      * // The result is: manufacturer-description-1
      * ~~~
      *
-     * @param string   $formName      The form name or empty string.
-     * @param string   $attributeName The attribute name.
-     * @param int|null $idLanguage    The language ID for multi-language input or null.
+     * @param string $inputName The input name.
      *
      * @return string The generated input ID.
      *
-     * @throws \InvalidArgumentException
-     *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getInputId($formName, $attributeName, $idLanguage = null)
+    public static function getInputIdByName($inputName)
     {
-        $id = strtolower(static::getInputName($formName, $attributeName, $idLanguage));
+        $id = strtolower($inputName);
         $id = str_replace(['[]', '][', '[', ']', ' ', '.'], ['', '-', '-', '', '-', '-'], $id);
         $id = preg_replace('/_+/', '-', $id);
         $id = trim($id, '-');

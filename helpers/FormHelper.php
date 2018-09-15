@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Form helper.
  *
- * @version 0.3.0
+ * @version 0.5.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -78,6 +78,39 @@ class FormHelper extends \HelperForm
         $id = trim($id, '-');
 
         return $id;
+    }
+
+    /**
+     * Encodes special characters into HTML entities.
+     *
+     * @param string $content      The content to be encoded.
+     * @param bool   $doubleEncode Whether to encode HTML entities in `$content`. If false, HTML entities in `$content` will not be further encoded.
+     *
+     * @return string The encoded content.
+     *
+     * @see decode()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function encode($content, $doubleEncode = true)
+    {
+        return htmlspecialchars($content, ENT_QUOTES | ENT_SUBSTITUTE, 'UTF-8', $doubleEncode);
+    }
+
+    /**
+     * Decodes special HTML entities back to the corresponding characters.
+     *
+     * @param string $content The content to be decoded.
+     *
+     * @return string The decoded content.
+     *
+     * @see encode()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function decode($content)
+    {
+        return htmlspecialchars_decode($content, ENT_QUOTES);
     }
 
     /**

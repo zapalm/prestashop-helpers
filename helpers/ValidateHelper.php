@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.2.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -24,6 +24,10 @@ class ValidateHelper extends \Validate
     const VALIDATOR_ID                          = 'isId';
     /** Validator name to check whether a value is correct UUID */
     const VALIDATOR_UUID                        = 'isUuid';
+    /** Validator name to check whether a value is empty */
+    const VALIDATOR_EMPTY                       = 'isEmpty';
+    /** Validator name to check whether a value is not empty */
+    const VALIDATOR_NOT_EMPTY                   = 'isNotEmpty';
     /** Validator name to check whether a value is correct Unsigned ID */
     const VALIDATOR_UNSIGNED_ID                 = 'isUnsignedId';
     /** Validator name to check whether a value is correct Unsigned Int */
@@ -243,5 +247,44 @@ class ValidateHelper extends \Validate
      */
     public static function isUuid($value) {
         return (1 === preg_match('/^\{?[A-Z0-9]{8}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{4}-[A-Z0-9]{12}\}?$/i', $value));
+    }
+
+    /**
+     * Checks if the given value is empty.
+     *
+     * A value is considered empty if it is null, an empty array, or an empty string.
+     * Note that this method is different from PHP empty(). It will return false when the value is 0.
+     *
+     * @param mixed $value The value to be checked.
+     *
+     * @return bool Whether the value is empty.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isEmpty($value)
+    {
+        if (is_string($value)) {
+            $value = trim($value);
+        }
+
+        return (null === $value || [] === $value || '' === $value);
+    }
+
+    /**
+     * Checks if the given value is not empty.
+     *
+     * This is the opposite method of isEmpty() and it is useful for validation.
+     *
+     * @param mixed $value The value to be checked.
+     *
+     * @return bool Whether the value is not empty.
+     *
+     * @see isEmpty()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isNotEmpty($value)
+    {
+        return (false === static::isEmpty($value));
     }
 }

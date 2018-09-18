@@ -14,12 +14,54 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Form helper.
  *
- * @version 0.5.0
+ * @version 0.6.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class FormHelper extends \HelperForm
 {
+    /**
+     * Generates breadcrumbs.
+     *
+     * For example,
+     *
+     * ~~~
+     * $breadcrumbs = FormHelper::breadcrumbs([
+     *     'Page'         => 'https://example.loc/page',
+     *     'Sup page'     => 'https://example.loc/page/suppage',
+     *     'Current page' => null, // A current page without URL to it.
+     * ]);
+     * Context::getContext()->smarty->assign('path', $breadcrumbs);
+     * // The result is:
+     * <a href="https://example.loc/page">Page</a><span class="navigation_page"> &gt; </span>
+     * <a href="https://example.loc/page/suppage">Sup page</a><span class="navigation_page"> &gt; </span>
+     * Current page
+     * // After page rendering these breadcrumbs are looks like:
+     * Home > Page > Sup page > Current page
+     * ~~~
+     *
+     * @param array  $definition       The definition of breadcrumbs, i.e. the array of titles associated with URLs.
+     * @param string $defaultSeparator The default separator for breadcrumbs.
+     *
+     * @return string The generated breadcrumbs.
+     */
+    public static function breadcrumbs(array $definition, $defaultSeparator = '>')
+    {
+        $result = [];
+        foreach ($definition as $title => $url) {
+            if (null === $url) {
+                $result[] = static::encode($title);
+            } else {
+                $result[] = '<a href="' . static::encode($url) . '">' . static::encode($title) . '</a>';
+            }
+        }
+
+        $separator = \Configuration::get('PS_NAVIGATION_PIPE', $defaultSeparator);
+        $separator = '<span class="navigation_page"> ' . static::encode($separator) . ' </span>';
+
+        return implode($separator, $result);
+    }
+
     /**
      * Generates an appropriate input name for the specified attribute name.
      *

@@ -3,7 +3,7 @@ Full documented helper classes for PrestaShop CMS.
 With these helpers some programming tasks becomes more simple and done faster.
 [The library homepage][5].
 
-# Examples
+## Examples
 
 **ArrayHelper**, indexing an array.
 ~~~
@@ -65,6 +65,16 @@ class ExampleAjaxModuleFrontController extends AjaxModuleFrontController {
 }
 // The output result is:
 // {"result":true,"data":null,"html":"","message":"Success!","errors":[]}
+~~~
+
+**Autoloader**, using Composer's autoloader to automatically load PHP classes, for example, *in a module* by adding classmap to your `composer.json` file.
+~~~
+"autoload": {
+  "classmap": [
+    "classes/",
+    "interfaces/"
+  ]
+}
 ~~~
 
 ## Installation

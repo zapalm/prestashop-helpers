@@ -15,7 +15,7 @@ namespace zapalm\prestashopHelpers\controllers;
  * Ajax front controller for a module.
  *
  * It's more simple to use and works faster.
- * Action methods should be named with prefix "action".
+ * Action methods should be named with prefix `action`.
  *
  * Example, how to use:
  * ~~~
@@ -29,14 +29,11 @@ namespace zapalm\prestashopHelpers\controllers;
  * // {"result":true,"data":null,"html":"","message":"Success!","errors":[]}
  * ~~~
  *
- * @property-read \Context $context Current context.
- * @property-read \Module  $module  Current module.
- *
- * @version 0.3.0
+ * @version 0.2.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-class AjaxModuleFrontController extends \ModuleFrontController {
+class AjaxModuleFrontController extends BaseModuleFrontController {
 
     /** @var AjaxResponse Response object. */
     protected $ajaxResponse;
@@ -57,29 +54,12 @@ class AjaxModuleFrontController extends \ModuleFrontController {
     /**
      * @inheritdoc
      *
-     * Did not called the parent because it has unwanted assignations for Ajax.
-     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function initContent() {
-        $action = trim(\Tools::getValue('action'));
-        if ('' !== $action) {
-            $action = 'action' . $action;
-            if (method_exists($this, $action)) {
-                $this->$action();
+        parent::initContent();
 
-                header('Content-Type: application/json');
-                exit(json_encode($this->ajaxResponse));
-            }
-        }
+        header('Content-Type: application/json');
+        exit(json_encode($this->ajaxResponse));
     }
-
-    /**
-     * @inheritdoc
-     *
-     * Did not called the parent because it has unwanted assignations for Ajax.
-     *
-     * @author Maksim T. <zapalm@yandex.com>
-     */
-    public function setMedia() {}
 }

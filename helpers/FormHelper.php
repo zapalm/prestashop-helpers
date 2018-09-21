@@ -70,7 +70,9 @@ class FormHelper extends \HelperForm
      *
      * ~~~
      * FormHelper::getInputName(Manufacturer::class, 'description', 1);
-     * // The result is: Manufacturer_description_1
+     * // The result is: Manufacturer[description_1]
+     * FormHelper::getInputName('', 'description', 1);
+     * // The result is: description_1
      * ~~~
      *
      * @param string   $formName      The form name or empty string.
@@ -89,11 +91,15 @@ class FormHelper extends \HelperForm
             throw new \InvalidArgumentException('The attribute name is empty.');
         }
 
-        return implode('_', array_filter([
-            $formName,
-            $attributeName,
-            $idLanguage,
-        ]));
+        if (null !== $idLanguage) {
+            $attributeName .= '_' . $idLanguage;
+        }
+
+        if ('' !== $formName) {
+            $attributeName = $formName . '[' . $attributeName . ']';
+        }
+
+        return $attributeName;
     }
 
     /**

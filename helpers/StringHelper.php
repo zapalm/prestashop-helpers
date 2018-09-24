@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * String helper.
  *
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -23,12 +23,12 @@ class StringHelper
     /**
      * Converts a CamelCase name into space-separated words.
      *
-     * For example, 'PostTag' will be converted to 'Post Tag'.
+     * For example, `PostTag` will be converted to `Post Tag`.
      *
      * @param string $name       The string to be converted.
      * @param bool   $capitalize Whether to capitalize the first letter in each word.
      *
-     * @return string
+     * @return string Space-separated words.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */

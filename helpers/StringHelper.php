@@ -41,4 +41,21 @@ class StringHelper
 
         return ($capitalize ? ucwords($words) : $words);
     }
+
+    /**
+     * Converts a word into CamelCased.
+     *
+     * Converts a word like `send_email` to `SendEmail`.
+     * It will remove non alphanumeric character from the word, so `who's online` will be converted to `WhoSOnline`.
+     *
+     * @param string $word The word to convert.
+     *
+     * @return string The CamelCased string.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function camelize($word)
+    {
+        return str_replace(' ', '', ucwords(preg_replace('/[^A-Za-z0-9]+/', ' ', $word)));
+    }
 }

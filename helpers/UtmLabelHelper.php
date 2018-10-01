@@ -12,7 +12,7 @@
 namespace zapalm\prestashopHelpers\helpers;
 
 /**
- * UTM helper.
+ * UTM label helper.
  *
  * @version 0.1.0
  *
@@ -21,7 +21,7 @@ namespace zapalm\prestashopHelpers\helpers;
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-class UtmLabelsHelper
+class UtmLabelHelper
 {
     const PARAM_UTM_SOURCE   = 'utm_source';
     const PARAM_UTM_MEDIUM   = 'utm_medium';

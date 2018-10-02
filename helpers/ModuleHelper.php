@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Module helper.
  *
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -41,5 +41,25 @@ class ModuleHelper
         }
 
         return $version;
+    }
+
+    /**
+     * Returns an instance of a module by given directory path.
+     *
+     * @param string $directoryPath The directory path, for example, __DIR__.
+     *
+     * @return \Module|bool The module instance or false if the module did't found by the path.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getInstanceByPath($directoryPath)
+    {
+        $modulePath = str_replace(realpath(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR, '', $directoryPath);
+        $moduleName = strstr($modulePath, DIRECTORY_SEPARATOR, true);
+        if (ValidateHelper::isModuleName($moduleName)) {
+            return \Module::getInstanceByName($moduleName);
+        }
+
+        return false;
     }
 }

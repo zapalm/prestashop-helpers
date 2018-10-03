@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * File helper.
  *
- * @version 0.5.0
+ * @version 0.6.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -99,6 +99,37 @@ class FileHelper
         }
 
         return $bytes;
+    }
+
+    /**
+     * Returns files found under the directory specified by pattern.
+     *
+     * @param string $pattern The directory specified by pattern.
+     *
+     * @return string[] Files found directory specified by pattern.
+     *
+     * @see glob() for pattern examples.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function findFiles($pattern)
+    {
+        $directory = realpath(dirname($pattern));
+        if (false === $directory) {
+            return [];
+        }
+
+        $pattern = $directory. DIRECTORY_SEPARATOR . basename($pattern);
+        $files   = glob($pattern);
+
+        $dirs = glob(dirname($pattern) . DIRECTORY_SEPARATOR . '*', GLOB_ONLYDIR | GLOB_NOSORT);
+        if (is_array($dirs) && count($dirs)) {
+            foreach ($dirs as $dir) {
+                $files = array_merge($files, static::findFiles($dir . DIRECTORY_SEPARATOR . basename($pattern)));
+            }
+        }
+
+        return $files;
     }
 
     /**

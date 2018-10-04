@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Diagnostic helper.
  *
- * @version 0.2.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -39,6 +39,35 @@ class DiagnosticHelper
         }
 
         return false;
+    }
+
+    /**
+     * Checks if the given class is exists in the PrestaShop class index (i.e., the class path is cached).
+     *
+     * @param string $className The class name to check.
+     *
+     * @return bool Whether the class path is cached.
+     *
+     * @see \PrestaShopAutoload::INDEX_FILE
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isClassPathCached($className)
+    {
+        return isset(\PrestaShopAutoload::getInstance()->index[$className]);
+    }
+
+    /**
+     * Regenerates PrestaShop class index.
+     *
+     * @see isClassPathCached()
+     * @see \PrestaShopAutoload::INDEX_FILE
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function regenerateClassIndex()
+    {
+        \PrestaShopAutoload::getInstance()->generateIndex();
     }
 
     /**

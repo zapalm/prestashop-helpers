@@ -55,6 +55,13 @@ public function log($messages, $level = AbstractLogger::WARNING) {
 }
 ~~~
 
+**DiagnosticHelper**, checking if a method is overridden.
+~~~
+if (DiagnosticHelper::isMethodOverridden('AddressController', 'init')) {
+    $this->_errors[] = $this->l('The AddressController::init() already overridden.');
+}
+~~~
+
 **AjaxModuleFrontController**, creating a simple Ajax controller for a module.
 ~~~
 class ExampleAjaxModuleFrontController extends AjaxModuleFrontController {

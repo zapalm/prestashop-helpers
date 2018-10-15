@@ -74,6 +74,12 @@ class ExampleAjaxModuleFrontController extends AjaxModuleFrontController {
 // {"result":true,"data":null,"html":"","message":"Success!","errors":[]}
 ~~~
 
+**ModuleHelper**, getting an instance of a module by given directory path.
+~~~
+$path   = '/var/www/prestashop/modules/homecategoriez/classes'; 
+$module = ModuleHelper::getInstanceByPath($path); /** @var HomeCategoriez $module The instance of the module: HomeCategoriez */
+~~~
+
 **Autoloader**, using Composer's autoloader to automatically load PHP classes, for example, *in a module* by adding classmap to your `composer.json` file.
 ~~~
 "autoload": {

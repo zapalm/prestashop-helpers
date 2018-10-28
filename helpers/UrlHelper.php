@@ -57,6 +57,20 @@ class UrlHelper
     }
 
     /**
+     * Returns URL-encoded query string of UTM labels.
+     *
+     * @param array $utmLabels The array of UTM labels.
+     *
+     * @return string URL-encoded query string.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getUtmLabelsQuery(array $utmLabels)
+    {
+        return http_build_query(array_filter($utmLabels));
+    }
+
+    /**
      * Returns an URL to the back-office (admin page).
      *
      * It's usable only in the context of the back-office.

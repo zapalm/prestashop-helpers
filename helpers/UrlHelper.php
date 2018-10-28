@@ -46,14 +46,14 @@ class UrlHelper
      */
     public static function getUtmLabels($source, $medium, $campaign = null, $content = null, $term = null, $referrer = null)
     {
-        return array_filter([
+        return [
             static::PARAM_UTM_SOURCE   => $source,
             static::PARAM_UTM_MEDIUM   => $medium,
             static::PARAM_UTM_CAMPAIGN => $campaign,
             static::PARAM_UTM_CONTENT  => $content,
             static::PARAM_UTM_TERM     => $term,
             static::PARAM_UTM_REFERRER => $referrer,
-        ]);
+        ];
     }
 
     /**

@@ -42,6 +42,9 @@ class UrlHelper
      * @link https://effinamazing.com/blog/dummies-guide-utm-tracking/ Description in English.
      * @link http://convert.ua/blog/ppc/utm-parameters/ Description in Russian.
      *
+     * @see getUtmLabelsQuery() To get URL-encoded query string of UTM labels.
+     * @see array_filter() To remove UTM labels with empty values.
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getUtmLabels($source, $medium, $campaign = null, $content = null, $term = null, $referrer = null)

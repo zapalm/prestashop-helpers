@@ -65,7 +65,7 @@ class UrlHelper
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public function getUtmLabelsQuery(array $utmLabels)
+    public static function getUtmLabelsQuery(array $utmLabels)
     {
         return http_build_query(array_filter($utmLabels));
     }

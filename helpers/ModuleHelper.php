@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Module helper.
  *
- * @version 0.2.0
+ * @version 0.3.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -61,5 +61,24 @@ class ModuleHelper
         }
 
         return false;
+    }
+
+    /**
+     * Uninstalls a module's tabs of the back-office menu.
+     *
+     * @param string $moduleName The module name.
+     *
+     * @return bool Whether the uninstall is success.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function uninstallTabs($moduleName) {
+        foreach (\Tab::getCollectionFromModule($moduleName) as $tab) {
+            if (false === $tab->delete()) {
+                return false;
+            }
+        }
+
+        return true;
     }
 }

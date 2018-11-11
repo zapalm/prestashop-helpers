@@ -38,7 +38,7 @@ class AboutModuleWidget
     protected $mainLanguageIsoCode = 'ru';
 
     /** @var string License title */
-    protected $licenseTitle;
+    protected $licenseTitle = self::LICENSE_AFL30;
 
     /** @var string License URL */
     protected $licenseUrl;

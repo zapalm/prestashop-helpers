@@ -90,6 +90,6 @@ class UrlHelper
             throw new \LogicException();
         }
 
-        return \Context::getContext()->shop->getBaseURL() . basename(_PS_ADMIN_DIR_) . '/';
+        return \Context::getContext()->shop->getBaseURL(true) . basename(_PS_ADMIN_DIR_) . '/';
     }
 }

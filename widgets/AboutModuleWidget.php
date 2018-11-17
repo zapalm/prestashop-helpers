@@ -112,7 +112,7 @@ class AboutModuleWidget
 
         $licenseHtml = $this->licenseTitle;
         if (null !== $this->licenseUrl) {
-            if (false === filter_var($this->licenseUrl, FILTER_VALIDATE_URL)) {
+            if (0 === preg_match('/^\@\S+\@$/', $this->licenseUrl) && false === filter_var($this->licenseUrl, FILTER_VALIDATE_URL)) {
                 throw new \LogicException('Invalid configuration: license URL.');
             }
 

@@ -287,4 +287,16 @@ class ValidateHelper extends \Validate
     {
         return (false === static::isEmpty($value));
     }
+
+    /**
+     * @inheritdoc
+     *
+     * Overridden, because ThirtyBees don't check for an empty value.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isEmail($email)
+    {
+        return (false === static::isEmpty($email) && parent::isEmail($email));
+    }
 }

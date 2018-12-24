@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.4.0
+ * @version 0.10.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -291,12 +291,121 @@ class ValidateHelper extends \Validate
     /**
      * @inheritdoc
      *
-     * Overridden, because ThirtyBees don't check for an empty value.
-     *
      * @author Maksim T. <zapalm@yandex.com>
+     *
+     * @todo Use https://github.com/egulias/EmailValidator
      */
     public static function isEmail($email)
     {
-        return (false === static::isEmpty($email) && parent::isEmail($email));
+        // ThirtyBees don't check for an empty value
+        if (static::isEmpty($email)) {
+            return false;
+        }
+
+        // PrestaShop can't check an e-mail in Punycode
+        if (static::isAscii($email) && static::isIdnEmail($email)) {
+            return true;
+        }
+
+        return parent::isEmail($email);
+    }
+
+    /**
+     * Checks if the given domain is an IDN (Internationalized domain name).
+     *
+     * @param string $domain The domain to check.
+     *
+     * @return bool Whether the domain is the IDN.
+     *
+     * @see https://en.wikipedia.org/wiki/Internationalized_domain_name
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isIdn($domain)
+    {
+        return (false === static::isAscii($domain) || static::isPunycodeDomain($domain));
+    }
+
+    /**
+     * Checks if the given e-mail is an IDN e-mail (international email).
+     *
+     * @param string $email The e-mail to check.
+     *
+     * @return bool Whether the e-mail is the international.
+     *
+     * @see https://en.wikipedia.org/wiki/International_email
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isIdnEmail($email)
+    {
+        $domain = explode('@', $email)[1];
+
+        // Checking only a domain, because most e-mail companies don't support international mailboxes
+        return static::isIdn($domain);
+    }
+
+    /**
+     * Checks if the given value is in ASCII character encoding.
+     *
+     * @param string $value The value to check.
+     *
+     * @return bool Whether the value is in ASCII character encoding.
+     *
+     * @see https://en.wikipedia.org/wiki/ASCII
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isAscii($value)
+    {
+        return ('ASCII' === mb_detect_encoding($value, 'ASCII', true));
+    }
+
+    /**
+     * Checks if the given value is in Punycode.
+     *
+     * @param string $value The value to check.
+     *
+     * @return bool Whether the value is in Punycode.
+     *
+     * @throws \LogicException If the string is not encoded by UTF-8.
+     *
+     * @see https://en.wikipedia.org/wiki/Punycode
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isPunycode($value)
+    {
+        if ('UTF-8' !== mb_detect_encoding($value, 'UTF-8', true)) {
+            throw new \LogicException('The string should be encoded by UTF-8 to do the right check.');
+        }
+
+        if (false !== mb_stripos($value, 'xn--', 0, 'UTF-8')) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Checks if the given domain is in Punycode.
+     *
+     * @param string $domain The domain to check.
+     *
+     * @return bool Whether the domain is in Punycode.
+     *
+     * @see https://developer.mozilla.org/en-US/docs/Mozilla/Internationalized_domain_names_support_in_Mozilla#ASCII-compatible_encoding_.28ACE.29
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isPunycodeDomain($domain)
+    {
+        foreach (explode('.', $domain) as $part) {
+            if (static::isPunycode($part)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

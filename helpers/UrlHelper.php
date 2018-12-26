@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.2.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -43,6 +43,7 @@ class UrlHelper
      * @link http://convert.ua/blog/ppc/utm-parameters/ Description in Russian.
      *
      * @see getUtmLabelsQuery() To get URL-encoded query string of UTM labels.
+     * @see getUtmLabelsRequest() To get UTM labels from the current request.
      * @see array_filter() To remove UTM labels with empty values.
      *
      * @author Maksim T. <zapalm@yandex.com>
@@ -71,6 +72,23 @@ class UrlHelper
     public static function getUtmLabelsQuery(array $utmLabels)
     {
         return http_build_query(array_filter($utmLabels));
+    }
+
+    /**
+     * Returns UTM labels from the current request.
+     *
+     * @return array Key-Value array with UTM labels.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getUtmLabelsRequest()
+    {
+        $params = static::getUtmLabels('', '');
+        foreach ($params as $key => $value) {
+            $params[$key] = \Tools::getValue($key);
+        }
+
+        return array_filter($params);
     }
 
     /**

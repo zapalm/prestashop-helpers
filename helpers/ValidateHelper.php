@@ -402,11 +402,7 @@ class ValidateHelper extends \Validate
             throw new \LogicException('The string should be encoded by UTF-8 to do the right check.');
         }
 
-        if (false !== mb_stripos($value, 'xn--', 0, 'UTF-8')) {
-            return true;
-        }
-
-        return false;
+        return (0 === mb_stripos($value, 'xn--', 0, 'UTF-8'));
     }
 
     /**

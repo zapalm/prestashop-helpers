@@ -220,6 +220,16 @@ class ValidateHelper extends \Validate
     const VALIDATOR_PRESTA_SHOP_VERSION         = 'isPrestaShopVersion';
     /** Validator name to check whether a value is correct Order Invoice Number */
     const VALIDATOR_ORDER_INVOICE_NUMBER        = 'isOrderInvoiceNumber';
+    /** Validator name to check whether a value is correct IDN (internationalized domain name) */
+    const VALIDATOR_IDN                         = 'isIdn';
+    /** Validator name to check whether a value is correct IDN e-mail (international e-mail) */
+    const VALIDATOR_IDN_EMAIL                   = 'isIdnEmail';
+    /** Validator name to check whether a value is in ASCII character encoding */
+    const VALIDATOR_ASCII                       = 'isAscii';
+    /** Validator name to check whether a value is in Punycode */
+    const VALIDATOR_PUNYCODE                    = 'isPunycode';
+    /** Validator name to check whether a domain is in Punycode */
+    const VALIDATOR_PUNYCODE_DOMAIN             = 'isPunycodeDomain';
 
     /**
      * Returns whether a value is correct identifier.
@@ -376,6 +386,10 @@ class ValidateHelper extends \Validate
      */
     public static function isPunycode($value)
     {
+        if (false === static::isAscii($value)) {
+            return false;
+        }
+
         if ('UTF-8' !== mb_detect_encoding($value, 'UTF-8', true)) {
             throw new \LogicException('The string should be encoded by UTF-8 to do the right check.');
         }

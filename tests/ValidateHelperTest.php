@@ -47,6 +47,7 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     public function testIsAscii()
     {
         $emails = [
+            // White list
             'no-reply@modulez.ru'        => true,  // English, ASCII
             'почта@престашоп.рф'         => false, // Russian, Unicode
             'квіточка@пошта.укр'         => false, // Ukrainian, Unicode
@@ -71,6 +72,7 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     public function testIsIdnEmail()
     {
         $emails = [
+            // White list
             'no-reply@modulez.ru'        => false, // English, ASCII
             'почта@престашоп.рф'         => true,  // Russian, Unicode
             'квіточка@пошта.укр'         => true,  // Ukrainian, Unicode
@@ -95,12 +97,18 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     public function testIsPunycodeDomain()
     {
         $domains = [
+            // White list
+            'почта@престашоп.рф'          => false, // Russian, Unicode
             'modulez.ru'                  => false, // English, ASCII
             'xn--80aj2abdcii9c.xn--p1ai'  => true,  // Russian, ASCII
             'xn--80a1acn3a.xn--j1amh'     => true,  // Ukrainian, ASCII
             'xn--srensen-90a.example.com' => true,  // German, ASCII
             'xn--mxahbxey0c.xn--xxaf0a'   => true,  // Greek, ASCII
             'xn--fsqu00a.xn--4rr70v'      => true,  // Chinese, ASCII
+
+            // Black List
+            'xn--престашоп.xn--рф'        => false, // Russian, Unicode
+            'xn--prestashop.рф'           => false, // Russian, Unicode
         ];
 
         foreach ($domains as $domain => $isPunycode) {
@@ -119,12 +127,15 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     public function testIsEmail()
     {
         $emails = [
+            // White list
             'no-reply@modulez.ru'        => true,  // English, ASCII
             'почта@престашоп.рф'         => true,  // Russian, Unicode
             'квіточка@пошта.укр'         => true,  // Ukrainian, Unicode
             'Dörte@Sörensen.example.com' => true,  // German, Unicode
             'θσερ@εχαμπλε.ψομ'           => true,  // Greek, Unicode
             '用户@例子.广告'               => true,  // Chinese, Unicode
+
+            // Black List
             'mailbox@'                   => false,
             '@localhost'                 => false,
             '@'                          => false,

@@ -333,6 +333,10 @@ class ValidateHelper extends \Validate
      */
     public static function isIdn($domain)
     {
+        if (static::isEmpty($domain)) {
+            return false;
+        }
+
         return (false === static::isAscii($domain) || static::isPunycodeDomain($domain));
     }
 
@@ -349,7 +353,11 @@ class ValidateHelper extends \Validate
      */
     public static function isIdnEmail($email)
     {
-        $domain = explode('@', $email)[1];
+        list($mailbox, $domain) = explode('@', $email, 2);
+
+        if (static::isEmpty($mailbox)) {
+            return false;
+        }
 
         // Checking only a domain, because most e-mail companies don't support international mailboxes
         return static::isIdn($domain);
@@ -414,12 +422,18 @@ class ValidateHelper extends \Validate
      */
     public static function isPunycodeDomain($domain)
     {
+        $hasPunycode = false;
+
         foreach (explode('.', $domain) as $part) {
+            if (false === static::isAscii($part)) {
+                return false;
+            }
+
             if (static::isPunycode($part)) {
-                return true;
+                $hasPunycode = true;
             }
         }
 
-        return false;
+        return $hasPunycode;
     }
 }

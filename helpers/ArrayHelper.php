@@ -50,16 +50,16 @@ class ArrayHelper
      * // ]
      * ~~~
      *
-     * @param array             $data          The source array.
-     * @param string            $groupByColumn The column name to group the source array.
-     * @param string|null       $indexByColumn The column name to index the returned array. If null, the resulting array will not be indexed.
-     * @param string|array|null $valueToPick   The column or columns from the returned array to maintain. If null, all values will be returned.
+     * @param array|\Traversable $data          The source array.
+     * @param string             $groupByColumn The column name to group the source array.
+     * @param string|null        $indexByColumn The column name to index the returned array. If null, the resulting array will not be indexed.
+     * @param string|array|null  $valueToPick   The column or columns from the returned array to maintain. If null, all values will be returned.
      *
      * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function group(array $data, $groupByColumn, $indexByColumn = null, $valueToPick = null)
+    public static function group($data, $groupByColumn, $indexByColumn = null, $valueToPick = null)
     {
         if ([] === $data) {
             return [];
@@ -133,14 +133,14 @@ class ArrayHelper
      * // ]
      * ~~~
      *
-     * @param array  $array The array that needs to be indexed.
-     * @param string $key   The column name to index the array.
+     * @param array|\Traversable $array The array that needs to be indexed.
+     * @param string             $key   The column name to index the array.
      *
      * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function index(array $array, $key)
+    public static function index($array, $key)
     {
         $result = [];
 
@@ -171,16 +171,16 @@ class ArrayHelper
      * // The result is: ['123', '345']
      * ~~~
      *
-     * @param array  $array    The source array.
-     * @param string $column   The column name to be returned.
-     * @param bool   $keepKeys Whether to keep keys of the source array.
-     * @param bool   $unique   Whether to return only unique values.
+     * @param array|\Traversable $array    The source array.
+     * @param string             $column   The column name to be returned.
+     * @param bool               $keepKeys Whether to keep keys of the source array.
+     * @param bool               $unique   Whether to return only unique values.
      *
      * @return array
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getColumn(array $array, $column, $keepKeys = true, $unique = false)
+    public static function getColumn($array, $column, $keepKeys = true, $unique = false)
     {
         $result = [];
         foreach ($array as $key => $item) {

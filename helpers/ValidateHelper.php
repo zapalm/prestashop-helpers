@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.10.0
+ * @version 0.11.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -242,6 +242,20 @@ class ValidateHelper extends \Validate
      */
     public static function isId($value) {
         return (parent::isUnsignedInt($value) && (int)$value > 0);
+    }
+
+    /**
+     * Returns whether a value is correct integer.
+     *
+     * @param string|int $value The value to check.
+     *
+     * @return bool
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isInt($value)
+    {
+        return ((string)(int)$value === (string)$value);
     }
 
     /**

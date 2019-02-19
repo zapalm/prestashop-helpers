@@ -326,6 +326,11 @@ class ValidateHelper extends \Validate
             return false;
         }
 
+        // Should be both a mailbox and a domain
+        if (2 !== count(explode('@', $email))) {
+            return false;
+        }
+
         // PrestaShop can't check an e-mail in Punycode
         if (static::isAscii($email) && static::isIdnEmail($email)) {
             return true;
@@ -367,11 +372,7 @@ class ValidateHelper extends \Validate
      */
     public static function isIdnEmail($email)
     {
-        list($mailbox, $domain) = explode('@', $email, 2);
-
-        if (static::isEmpty($mailbox)) {
-            return false;
-        }
+        $domain = explode('@', $email, 2)[1];
 
         // Checking only a domain, because most e-mail companies don't support international mailboxes
         return static::isIdn($domain);

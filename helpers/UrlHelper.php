@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.4.0
+ * @version 0.5.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -109,5 +109,39 @@ class UrlHelper
         }
 
         return \Context::getContext()->shop->getBaseURL(true) . basename(_PS_ADMIN_DIR_) . '/';
+    }
+
+    /**
+     * Returns a domain name of a shop.
+     *
+     * This is the analog of Tools::getShopDomain(), but it is works from PrestaShop 1.3 to the last one.
+     *
+     * @param bool $appendHttpProtocol       Whether to return the domain name with HTTP protocol.
+     * @param bool $convertSpecialCharacters Whether to convert special characters to HTML entities.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getShopDomain($appendHttpProtocol = false, $convertSpecialCharacters = false)
+    {
+        if (version_compare(_PS_VERSION_, '1.4.0.8', '>=')) {
+            return \Tools::getShopDomain($appendHttpProtocol, $convertSpecialCharacters);
+        }
+
+        $domain = \Configuration::get('PS_SHOP_DOMAIN');
+        if (false !== $domain) {
+            $domain = \Tools::getHttpHost();
+        }
+
+        if ($convertSpecialCharacters) {
+            $domain = htmlspecialchars($domain, ENT_COMPAT, 'UTF-8');
+        }
+
+        if ($appendHttpProtocol) {
+            $domain = 'http://' . $domain;
+        }
+
+        return $domain;
     }
 }

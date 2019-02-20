@@ -106,7 +106,7 @@ Add the dependency directly to your `composer.json` file:
 ```
 
 ## How to help the project grow and get updates
-* **Become the [patron][2]** to help me work more for supporting and improving this project.
+* **Become the [patron][2]** or support me by **[Flattr][6]** to help me work more for supporting and improving this project.
 * Report an issue.
 * Give me feedback or [contact with me][3].
 * Give the star to the project.
@@ -143,3 +143,4 @@ Contributors wishing to edit the project's files should follow the following pro
 [3]: https://prestashop.modulez.ru/en/contact-us
 [4]: https://help.github.com/articles/about-pull-requests/
 [5]: https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html
+[6]: https://flattr.com/@zapalm

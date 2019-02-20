@@ -17,6 +17,7 @@
   ],
   "minimum-stability": "dev",
   "require": {
+    "ext-json": "*",
     "php": ">=5.4"
   },
   "autoload": {

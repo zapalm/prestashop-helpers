@@ -251,6 +251,8 @@ class ValidateHelper extends \Validate
      *
      * @return bool
      *
+     * @see \Validate::isInt()
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function isInt($value)
@@ -318,6 +320,8 @@ class ValidateHelper extends \Validate
      * @author Maksim T. <zapalm@yandex.com>
      *
      * @todo Use https://github.com/egulias/EmailValidator
+     *
+     * @see \Validate::isEmail()
      */
     public static function isEmail($email)
     {
@@ -336,7 +340,8 @@ class ValidateHelper extends \Validate
             return true;
         }
 
-        return parent::isEmail($email);
+        // Calling the method of the base class, because of a possible recursion.
+        return \ValidateCore::isEmail($email);
     }
 
     /**
@@ -455,6 +460,8 @@ class ValidateHelper extends \Validate
      *
      * @return bool Whether the value is an URL.
      *
+     * @see \Validate::isUrl()
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function isUrl($value)
@@ -468,6 +475,7 @@ class ValidateHelper extends \Validate
             return false;
         }
 
-        return (bool)parent::isUrl($value);
+        // Calling the method of the base class, because of a possible recursion.
+        return (bool)\ValidateCore::isUrl($value);
     }
 }

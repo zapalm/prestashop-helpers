@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.11.0
+ * @version 0.12.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -446,5 +446,28 @@ class ValidateHelper extends \Validate
         }
 
         return $hasPunycode;
+    }
+
+    /**
+     * Checks if the given value is an URL.
+     *
+     * @param string $value The value to check.
+     *
+     * @return bool Whether the value is an URL.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isUrl($value)
+    {
+        if (false === is_string($value)) {
+            return false;
+        }
+
+        $value = trim($value);
+        if ('' === $value) {
+            return false;
+        }
+
+        return (bool)parent::isUrl($value);
     }
 }

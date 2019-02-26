@@ -88,18 +88,28 @@ class BaseModuleFrontController extends \ModuleFrontController
     }
 
     /**
-     * Gets a translation for a given text.
+     * Returns a translation for a given text.
      *
-     * All parameters except `$text` are unused and these are presents only for the compatibility.
+     * All parameters except `$text` and `$fileName` are unused and these are presents only for the compatibility.
      *
-     * @param string $text The input text.
+     * @param string      $text     The input text to translate.
+     * @param string|bool $fileName The file name, containing the text to translate (or false to determine the file automatically).
      *
      * @return string The translation for a given text or the same text if there is no translation for it.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    protected function l($text, $specific = false, $class = null, $addslashes = false, $htmlentities = true)
+    protected function l($text, $fileName = false, $class = null, $addslashes = false, $htmlentities = true)
     {
-        return $this->module->l($text, str_replace('.php', '', basename(__FILE__)));
+        if (false === $fileName) {
+            if (null === $this->php_self) {
+                $fileName = str_replace(strtolower(\ModuleFrontController::class), '', strtolower(static::class));
+                $fileName = str_replace(strtolower($this->module->name), '', $fileName);
+            } else {
+                $fileName = strtolower($this->php_self);
+            }
+        }
+
+        return $this->module->l($text, $fileName);
     }
 }

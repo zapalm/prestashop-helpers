@@ -33,7 +33,7 @@ if (false === defined('_PS_CONFIG_DIR_')) {
  *
  * The example, how to run the test case: phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
  *
- * @version 0.4.0
+ * @version 0.5.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -146,6 +146,54 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
             $this->assertTrue(
                 ValidateHelper::isEmail($email) === $isEmail,
                 $email . ' is e-mail.'
+            );
+        }
+    }
+
+    /**
+     * Test ID validator.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function testIsId()
+    {
+        $incorrectIds = [
+            ($resource = fopen('php://stderr', 'r')),
+            (new \StdClass()),
+            [10],
+            'text',
+            '',
+            false,
+            true,
+            null,
+            0.0,
+            '0',
+            0,
+            1.1,
+            -1,
+            '-2',
+            -PHP_INT_MAX,
+        ];
+
+        foreach ($incorrectIds as $value) {
+            $this->assertFalse(
+                ValidateHelper::isId($value),
+                print_r($value, true) . ' is not ID.'
+            );
+        }
+
+        fclose($resource);
+
+        $correctIds = [
+            '1',
+            PHP_INT_MAX,
+            (string)PHP_INT_MAX,
+        ];
+
+        foreach ($correctIds as $value) {
+            $this->assertTrue(
+                ValidateHelper::isId($value),
+                print_r($value, true) . ' is ID.'
             );
         }
     }

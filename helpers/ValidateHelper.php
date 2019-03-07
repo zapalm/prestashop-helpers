@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.12.0
+ * @version 0.13.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -28,7 +28,7 @@ class ValidateHelper extends \Validate
     const VALIDATOR_EMPTY                       = 'isEmpty';
     /** Validator name to check whether a value is not empty */
     const VALIDATOR_NOT_EMPTY                   = 'isNotEmpty';
-    /** Validator name to check whether a value is correct Unsigned ID */
+    /** @deprecated Validator name to check whether a value is correct Unsigned ID */
     const VALIDATOR_UNSIGNED_ID                 = 'isUnsignedId';
     /** Validator name to check whether a value is correct Unsigned Int */
     const VALIDATOR_UNSIGNED_INT                = 'isUnsignedInt';
@@ -238,10 +238,25 @@ class ValidateHelper extends \Validate
      *
      * @return bool
      *
+     * @see \Validate::isUnsignedId() But it should be deprecated for clear usage.
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function isId($value) {
-        return (parent::isUnsignedInt($value) && (int)$value > 0);
+    public static function isId($value)
+    {
+        return (static::isUnsignedInt($value) && $value > 0);
+    }
+
+    /**
+     * @deprecated Use isId() or isUnsignedInt() instead.
+     *
+     * @throws \LogicException
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isUnsignedId($id)
+    {
+        throw new \LogicException('isUnsignedId() is deprecated. Use isId() or isUnsignedInt() instead.');
     }
 
     /**
@@ -257,7 +272,23 @@ class ValidateHelper extends \Validate
      */
     public static function isInt($value)
     {
-        return ((string)(int)$value === (string)$value);
+        return (is_int($value) || (is_string($value) && (string)(int)$value === (string)$value));
+    }
+
+    /**
+     * Returns whether a value is correct unsigned integer.
+     *
+     * @param string|int $value The value to check.
+     *
+     * @return bool
+     *
+     * @see \Validate::isUnsignedInt()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isUnsignedInt($value)
+    {
+        return (static::isInt($value) && $value <= PHP_INT_MAX && $value >= 0);
     }
 
     /**

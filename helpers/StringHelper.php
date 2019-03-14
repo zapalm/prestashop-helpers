@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * String helper.
  *
- * @version 0.2.0
+ * @version 0.3.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -57,5 +57,24 @@ class StringHelper
     public static function camelize($word)
     {
         return str_replace(' ', '', ucwords(preg_replace('/[^A-Za-z0-9]+/', ' ', $word)));
+    }
+
+    /**
+     * Purifies an HTML string.
+     *
+     * @param string $string The source string with HTML markup.
+     *
+     * @return string The text without HTML markup.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function purifyHTML($string)
+    {
+        $string = \Tools::purifyHTML($string);                       // HTML may not be valid, which is why strip_tags will not clear them correctly.
+        $string = preg_replace('/&#?[a-z0-9]{2,8};/i', '', $string); // HTML purifier converts unpaired <> in HTML entities, but does not clean them.
+        $string = strip_tags($string);                               // Now we remove all the markup, leaving only the text.
+        $string = trim($string);                                     // Additionally, remove spaces.
+
+        return $string;
     }
 }

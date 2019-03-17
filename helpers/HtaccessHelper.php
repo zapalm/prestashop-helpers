@@ -114,7 +114,7 @@ class HtaccessHelper
         }
 
         $newRules = $startTag . ' - do not remove these comments (these are search tags)' . "\n";
-        foreach (ArrayHelper::getColumn(ShopUrl::getShopUrls()->getResults(), 'physical_uri', false, true) as $shopUrl) {
+        foreach (ArrayHelper::getColumn(\ShopUrl::getShopUrls()->getResults(), 'physical_uri', false, true) as $shopUrl) {
             foreach ($rulesList as $rule) {
                 $newRules .= str_replace('SHOP_URL', rtrim($shopUrl, '/'), $rule) . "\n";
             }

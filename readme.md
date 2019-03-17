@@ -3,6 +3,29 @@ Full documented helper classes for PrestaShop CMS.
 With these helpers some programming tasks becomes more simple and done faster.
 [The library homepage][5].
 
+**Helper list:**
+- ArrayHelper
+- BackendHelper
+- DateHelper
+- DiagnosticHelper
+- FileHelper
+- FormHelper
+- HtaccessHelper
+- LogHelper
+- ModuleHelper
+- ObjectHelper
+- SecurityHelper
+- StringHelper
+- UrlHelper
+- ValidateHelper
+
+**Controller list:**
+- BaseModuleFrontController.php
+- AjaxModuleFrontController.php
+
+**Component list:**
+- QualityService
+
 ## Examples
 
 **ArrayHelper**, indexing an array.

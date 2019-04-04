@@ -85,7 +85,7 @@ class StringHelper
      *
      * @return string
      *
-     * @see \Tools::ucfirst()
+     * @see \Tools::ucfirst() Converts only the first character of a first word to uppercase.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
@@ -93,7 +93,7 @@ class StringHelper
     {
         $string = trim($string); // A correct sentence is not starts and ends with a space.
         $string = mb_strtolower($string);
-        $string = mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
+        $string = \Tools::ucfirst($string);
 
         return $string;
     }

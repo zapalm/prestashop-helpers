@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * String helper.
  *
- * @version 0.3.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -74,6 +74,26 @@ class StringHelper
         $string = preg_replace('/&#?[a-z0-9]{2,8};/i', '', $string); // HTML purifier converts unpaired <> in HTML entities, but does not clean them.
         $string = strip_tags($string);                               // Now we remove all the markup, leaving only the text.
         $string = trim($string);                                     // Additionally, remove spaces.
+
+        return $string;
+    }
+
+    /**
+     * Converts a given string to the case like in a sentence.
+     *
+     * @param string $string The source string.
+     *
+     * @return string
+     *
+     * @see \Tools::ucfirst()
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function sentencenize($string)
+    {
+        $string = trim($string); // A correct sentence is not starts and ends with a space.
+        $string = mb_strtolower($string);
+        $string = mb_strtoupper(mb_substr($string, 0, 1)) . mb_substr($string, 1);
 
         return $string;
     }

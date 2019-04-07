@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * File helper.
  *
- * @version 0.6.0
+ * @version 0.7.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -56,27 +56,41 @@ class FileHelper
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getFileSizeUploadLimit() {
-        $maxSize           = 0;
-        $postMaxSize       = ini_get('post_max_size');
-        $uploadMaxFileSize = ini_get('upload_max_filesize');
+    public static function getFileSizeUploadLimit()
+    {
+        $maxSize           = (int)static::parseSize(ini_get('post_max_size'));
+        $uploadMaxFileSize = (int)static::parseSize(ini_get('upload_max_filesize'));
 
-        $regex = '/^([0-9]+)([bkmgtpezy])$/i';
-        if ('' !== $postMaxSize && preg_match($regex, $postMaxSize, $match)) {
-            $bytes = round($match[1] * pow(1024, stripos('bkmgtpezy', strtolower($match[2]))));
-            if ($bytes > 0) {
-                $maxSize = (int)$bytes;
-            }
-        }
-
-        if ('' !== $uploadMaxFileSize && preg_match($regex, $uploadMaxFileSize, $match)) {
-            $bytes = round($match[1] * pow(1024, stripos('bkmgtpezy', strtolower($match[2]))));
-            if ($bytes > 0 && ($maxSize <= 0 || $maxSize > $bytes)) {
-                $maxSize = (int)$bytes;
-            }
+        if ($uploadMaxFileSize > 0 && (0 === $maxSize || $maxSize > $uploadMaxFileSize)) {
+            $maxSize = (int)$uploadMaxFileSize;
         }
 
         return (0 === $maxSize ? false : $maxSize);
+    }
+
+    /**
+     * Returns a parsed size from a given value (like 10M, 1024k and so on).
+     *
+     * @param string|int $value The value to parse.
+     *
+     * @return int|bool The size in bytes or false on error.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function parseSize($value)
+    {
+        if (is_numeric($value) && $value >= 0) {
+            return (int)$value;
+        }
+
+        if (1 === preg_match('/^([0-9]+)([bkmgtpezy])$/i', $value, $match)) {
+            $bytes = round($match[1] * (float)pow(1024, stripos('bkmgtpezy', $match[2])));
+            if ($bytes > 0) {
+                return (int)$bytes;
+            }
+        }
+
+        return false;
     }
 
     /**

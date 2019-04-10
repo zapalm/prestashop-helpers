@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * String helper.
  *
- * @version 0.4.0
+ * @version 0.5.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -96,5 +96,41 @@ class StringHelper
         $string = \Tools::ucfirst($string);
 
         return $string;
+    }
+
+    /**
+     * Generates an UUID.
+     *
+     * It is simply generates an UUID based on MD5 hash of a given identifier and a namespace.
+     * This algorithm is the simple implementation of UUID version 3.
+     *
+     * For example,
+     *
+     * ~~~
+     * $customer = new Customer(1);
+     * $result   = StringHelper::generateUuid($customer->id, 'customer');
+     * // The result is:
+     * // 4d3596e1-fdcb-8927-715d-8ba2487b1687
+     * ~~~
+     *
+     * @param string      $identifier The identifier (any scalar value, that can be casted to a string).
+     * @param string|null $namespace  The namespace in which to create the UUID (any scalar value, that can be casted to a string) or null (empty string) to do not use the namespace.
+     *
+     * @return string
+     *
+     * @see https://tools.ietf.org/html/rfc4122#page-13 Algorithm for Creating a Name-Based UUID.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function generateUuid($identifier, $namespace = null)
+    {
+        if ('' !== (string)$namespace) {
+            $identifier .= '_' . $namespace;
+        }
+
+        $hash = md5((string)$identifier);
+        $uuid = vsprintf('%s%s-%s-%s-%s-%s%s%s', str_split($hash, 4));
+
+        return $uuid;
     }
 }

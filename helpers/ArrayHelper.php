@@ -146,7 +146,12 @@ class ArrayHelper
 
         foreach ($array as $item) {
             if (is_object($item)) {
-                $result[$item->$key] = $item;
+                $getter = 'get' . $key;
+                if (method_exists($item, $getter)) {
+                    $result[$item->$getter()] = $item;
+                } else {
+                    $result[$item->$key] = $item;
+                }
             } else {
                 $result[$item[$key]] = $item;
             }

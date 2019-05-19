@@ -77,7 +77,7 @@ class ArrayHelper
                 foreach ($item as $key => $value) {
                     if (is_array($valueToPick)) {
                         if (array_key_exists($key, $valueToPick)) {
-                            $dataToSave[] = $value;
+                            $dataToSave[$key] = $value;
                         }
                     } else {
                         $dataToSave = $value;

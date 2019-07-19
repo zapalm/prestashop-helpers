@@ -90,7 +90,12 @@ class ArrayHelper
             if (is_array($item)) {
                 $groupKey = $item[$groupByColumn];
             } else {
-                $groupKey = $item->$groupByColumn;
+                $getter = 'get' . $groupByColumn;
+                if (method_exists($item, $getter)) {
+                    $groupKey = $item->$getter();
+                } else {
+                    $groupKey = $item->$groupByColumn;
+                }
             }
 
             if (false === isset($result[$groupKey])) {
@@ -103,7 +108,12 @@ class ArrayHelper
                 if (is_array($item)) {
                     $indexKey = $item[$indexByColumn];
                 } else {
-                    $indexKey = $item->$indexByColumn;
+                    $getter = 'get' . $indexByColumn;
+                    if (method_exists($item, $getter)) {
+                        $indexKey = $item->$getter();
+                    } else {
+                        $indexKey = $item->$indexByColumn;
+                    }
                 }
 
                 $result[$groupKey][$indexKey] = $dataToSave;

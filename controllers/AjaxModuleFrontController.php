@@ -44,6 +44,10 @@ class AjaxModuleFrontController extends BaseModuleFrontController {
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function init() {
+        if (false === $this->isTokenValid() || false === $this->context->cookie->exists()) {
+            exit;
+        }
+
         $this->ajaxResponse = new AjaxResponse();
         $this->ajax         = true;
         $this->content_only = true;

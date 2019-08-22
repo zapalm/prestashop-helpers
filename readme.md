@@ -16,6 +16,7 @@ With these helpers some programming tasks becomes more simple and done faster.
 - ObjectHelper
 - SecurityHelper
 - StringHelper
+- TranslateHelper
 - UrlHelper
 - ValidateHelper
 

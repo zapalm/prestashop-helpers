@@ -46,7 +46,7 @@ class BackendHelper
         if (ValidateHelper::isEmpty($tabTitle)) {
             $tabTitle = basename($tabClass);
             $tabTitle = substr($tabTitle, strlen('Admin'), strlen($tabTitle));
-            $tabTitle = \zapalm\prestashopHelpers\helpers\StringHelper::camel2words($tabTitle, false);
+            $tabTitle = StringHelper::camel2words($tabTitle, false);
             $tabTitle = ucfirst($tabTitle);
         }
 

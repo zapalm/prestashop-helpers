@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Backend helper.
  *
- * @version 0.2.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -97,5 +97,70 @@ class BackendHelper
         }
 
         return true;
+    }
+
+    /**
+     * Installs a hook.
+     *
+     * @param string      $name        The hook name.
+     * @param string|null $title       The title or null to generate automatically.
+     * @param string|null $description The description (optional).
+     *
+     * @return bool Whether the installation is success.
+     *
+     * @throws \LogicException If the hook name is invalid.
+     *
+     * @see \Module::registerHook() To register the hook after the installation.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function installHook($name, $title = null, $description = null)
+    {
+        if (0 === strpos($name, 'action')) {
+            $prefixLength = strlen('action');
+            $isPositional = false;
+        } elseif (0 === strpos($name, 'display')) {
+            $prefixLength = strlen('display');
+            $isPositional = true;
+        } else {
+            throw new \LogicException('Invalid hook name: there is no prefix (action or display).');
+        }
+
+        if (null === $title) {
+            $title = substr($name, $prefixLength, strlen($name));
+            $title = StringHelper::camel2words($title, false);
+            $title = ucfirst($title);
+        }
+
+        $hook = new \Hook();
+
+        $hook->name        = $name;
+        $hook->title       = $title;
+        $hook->description = $description;
+        $hook->position    = $isPositional;
+        $hook->live_edit   = $isPositional;
+
+        return (bool)$hook->save();
+    }
+
+    /**
+     * Uninstalls a hook.
+     *
+     * @param string $name The hook name.
+     *
+     * @return bool Whether the uninstallation is success.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function uninstallHook($name)
+    {
+        $id = \Hook::getIdByName($name);
+        if (false === $id) {
+            return true;
+        }
+
+        $hook = new \Hook($id);
+
+        return (bool)$hook->delete();
     }
 }

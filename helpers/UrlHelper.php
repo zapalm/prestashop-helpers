@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.5.0
+ * @version 0.6.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -143,5 +143,19 @@ class UrlHelper
         }
 
         return $domain;
+    }
+
+    /**
+     * Returns whether a host is match with the current host.
+     *
+     * @param string $host The host to check.
+     *
+     * @return bool
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isOriginHost($host)
+    {
+        return (preg_replace('/^www./', '', $host) === preg_replace('/^www./', '', \Tools::getHttpHost(false, false, true)));
     }
 }

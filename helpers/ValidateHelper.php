@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.13.0
+ * @version 0.14.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -376,6 +376,29 @@ class ValidateHelper extends \Validate
     }
 
     /**
+     * Checks if the given domain is valid.
+     *
+     * @param string $domain The domain to check.
+     *
+     * @return bool Whether the domain is valid.
+     *
+     * @see https://stackoverflow.com/a/25717506/1856214 Regular expression.
+     * @see isIdn() To check if the given domain is an IDN.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isDomain($domain)
+    {
+        if (static::isAscii($domain) && false === static::isPunycodeDomain($domain)) {
+            if (1 === preg_match('/^((?!-)[A-Za-z0-9-]{1,63}(?<!-)\\.)+[A-Za-z]{2,}$/', $domain)) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    /**
      * Checks if the given domain is an IDN (Internationalized domain name).
      *
      * @param string $domain The domain to check.
@@ -383,6 +406,7 @@ class ValidateHelper extends \Validate
      * @return bool Whether the domain is the IDN.
      *
      * @see https://en.wikipedia.org/wiki/Internationalized_domain_name
+     * @see isDomain() To check if the given domain (non-IDN) is valid.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */

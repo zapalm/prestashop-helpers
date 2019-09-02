@@ -31,14 +31,99 @@ if (false === defined('_PS_CONFIG_DIR_')) {
 /**
  * Test case for ValidateHelper.
  *
+ * Terminology.
+ * TLD: top-level domain.
+ * IDN: internationalized domain name.
+ *
  * The example, how to run the test case: phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
  *
- * @version 0.5.0
+ * @version 0.7.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class ValidateHelperTest extends PHPUnit_Framework_TestCase
 {
+    /**
+     * Test domain validator.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function testIsDomain()
+    {
+        $domains = [
+            // White list (valid non-IDN domains)
+            'www.google.com'              => true,
+            'google.com'                  => true,
+            'g.co'                        => true,
+            'modulez.ru'                  => true,
+            'modulez123.com'              => true,
+            'modulez-info.com'            => true,
+            'sub.modulez.com'             => true,
+            'sub.modulez-info.com'        => true,
+            'modulez.com.au'              => true,
+            'modulez.t.t.co'              => true,
+
+            // Black List
+            'localhost'                   => false, // Unqualified sub-domain
+            'modulez.t.t.c'               => false, // TLD must contain minimum 2 symbols
+            'modulez,com'                 => false, // Comma is not allowed
+            'modulez.123'                 => false, // TLD is not allows digits
+            '.com'                        => false, // Must start with [A-Za-z0-9]
+            'modulez.com/users'           => false, // Not the TLD, but the URL
+            '-modulez.com'                => false, // Cannot begin with the hyphen
+            'sub.-modulez.com'            => false, // ...
+            'modulez-.com'                => false, // Cannot end with the hyphen
+            'sub.modulez-.com'            => false, // ...
+
+            // Black List (invalid, because these are IDN domains)
+            'престашоп.рф'                => false, // Russian, Unicode
+            'xn--80aj2abdcii9c.xn--p1ai'  => false, // Russian, ASCII
+            'xn--80a1acn3a.xn--j1amh'     => false, // Ukrainian, ASCII
+            'xn--srensen-90a.example.com' => false, // German, ASCII
+            'xn--mxahbxey0c.xn--xxaf0a'   => false, // Greek, ASCII
+            'xn--fsqu00a.xn--4rr70v'      => false, // Chinese, ASCII
+
+            // Black List (invalid, because these are IDN domains that additionally incorrect)
+            'xn--престашоп.xn--рф'        => false, // Russian, Unicode
+            'xn--prestashop.рф'           => false, // Russian, Unicode
+        ];
+
+        foreach ($domains as $domain => $isDomain) {
+            $this->assertTrue(
+                ValidateHelper::isDomain($domain) === $isDomain,
+                $domain . ' is domain.'
+            );
+        }
+    }
+
+    /**
+     * Test IDN validator.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function testIsIdn()
+    {
+        $domains = [
+            // White list
+            'престашоп.рф'         => true,  // Russian, Unicode
+            'пошта.укр'            => true,  // Ukrainian, Unicode
+            'Sörensen.example.com' => true,  // German, Unicode
+            'εχαμπλε.ψομ'          => true,  // Greek, Unicode
+            '例子.广告'              => true,  // Chinese, Unicode
+
+            // Black List (invalid domains, because these are not an international)
+            'google.com'           => false,  // English, ASCII
+            'translate.google.com' => false,  // English, ASCII
+        ];
+
+        foreach ($domains as $domain => $isDomain) {
+            $this->assertTrue(
+                ValidateHelper::isIdn($domain) === $isDomain,
+                $domain . ' is IDN.'
+            );
+        }
+    }
+
     /**
      * Test ASCII validator.
      *

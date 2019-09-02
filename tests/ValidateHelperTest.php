@@ -52,9 +52,9 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     {
         $domains = [
             // White list (valid non-IDN domains)
+            'a.ru'                        => true, // Minimal length of domain name is 1, but the minimal length of TLD is 2
             'www.google.com'              => true,
             'google.com'                  => true,
-            'g.co'                        => true,
             'modulez.ru'                  => true,
             'modulez123.com'              => true,
             'modulez-info.com'            => true,
@@ -69,6 +69,8 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
             'modulez,com'                 => false, // Comma is not allowed
             'modulez.123'                 => false, // TLD is not allows digits
             '.com'                        => false, // Must start with [A-Za-z0-9]
+            '.'                           => false, // Just the dot
+            'ru.'                         => false, // Without TLD
             'modulez.com/users'           => false, // Not the TLD, but the URL
             '-modulez.com'                => false, // Cannot begin with the hyphen
             'sub.-modulez.com'            => false, // ...
@@ -105,11 +107,18 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     {
         $domains = [
             // White list
+            'р.ф'                  => true,  // Minimal length is 1 of each part of a domain name (Russian, Unicode)
             'престашоп.рф'         => true,  // Russian, Unicode
             'пошта.укр'            => true,  // Ukrainian, Unicode
             'Sörensen.example.com' => true,  // German, Unicode
             'εχαμπλε.ψομ'          => true,  // Greek, Unicode
             '例子.广告'              => true,  // Chinese, Unicode
+
+            // Black List
+            'хост'                 => false,  // Just the host name (Russian, Unicode)
+            '.'                    => false,  // Just the dot
+            'рф.'                  => false,  // Without TLD
+            '.рф'                  => false,  // Without a domain name (Russian, Unicode)
 
             // Black List (invalid domains, because these are not an international)
             'google.com'           => false,  // English, ASCII

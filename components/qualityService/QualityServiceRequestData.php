@@ -42,11 +42,8 @@ class QualityServiceRequestData
     /** @var string The site domain. */
     public $shopDomain;
 
-    /** @var string The e-mail of a shop. */
+    /** @var string Public e-mail from a shop's contacts. */
     public $shopEmail;
-
-    /** @var string The e-mail of an administrator. */
-    public $administratorEmail;
 
     /** @var string The ISO-code of language. */
     public $languageIsoCode;

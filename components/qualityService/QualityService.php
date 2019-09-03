@@ -115,11 +115,18 @@ class QualityService
         $data->thirtybeesVersion = (defined('_TB_VERSION_') ? _TB_VERSION_ : null);
         $data->shopDomain        = UrlHelper::getShopDomain();
 
-        if ($this->isPaidSupportIncluded && (null !== $data->thirtybeesVersion || version_compare($data->prestashopVersion, '1.5.0.1', '>='))) {
-            $data->languageIsoCode    = \Context::getContext()->language->iso_code;
-            $data->shopEmail          = \Configuration::get('PS_SHOP_EMAIL');
-            $data->administratorEmail = \Context::getContext()->employee->email;
+        if (isset(\Context::getContext()->language)) {
+            $data->languageIsoCode = \Context::getContext()->language->iso_code;
+        } else {
+            global $cookie; /** @var \Cookie $cookie */
+            if (isset($cookie->id_lang)) {
+                $data->languageIsoCode = (string)\Language::getIsoById($cookie->id_lang);
+            }
         }
+
+        // This public e-mail from a shop's contacts can be used by a developer to send only an urgent information about
+        // security issue of a module!
+        $data->shopEmail = \Configuration::get('PS_SHOP_EMAIL');
 
         return $data;
     }

@@ -25,6 +25,7 @@ With these helpers some programming tasks becomes more simple and done faster.
 - AjaxModuleFrontController.php
 
 **Component list:**
+- Cache
 - QualityService
 
 ## Examples

@@ -27,6 +27,7 @@ With these helpers some programming tasks becomes more simple and done faster.
 **Component list:**
 - Cache
 - QualityService
+- Autoloader (used Composer that goes to boot)
 
 ## Examples
 Every method and class is full documented, so here are several examples, i.e. just a one for each class. 

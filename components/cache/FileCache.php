@@ -18,7 +18,7 @@ namespace zapalm\prestashopHelpers\components\cache;
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-class FileCache extends CacheFs
+class FileCache extends \CacheFs
 {
     /** @var static Instance. */
     protected static $instance;

@@ -18,7 +18,7 @@ namespace zapalm\prestashopHelpers\components\cache;
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-abstract class BaseCache extends Cache
+abstract class BaseCache extends \Cache
 {
     /** @var static Instance. */
     protected static $instance;

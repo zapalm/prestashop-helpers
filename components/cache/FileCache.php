@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * File cache system.
  *
- * @version 0.9.0
+ * @version 0.10.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -89,7 +89,7 @@ class FileCache extends BaseCache
      */
     protected function _get($key)
     {
-        if (false === $this->_exists($key)) {
+        if (false === $this->_exists($key) || $this->_expired($key)) {
             return false;
         }
 
@@ -110,16 +110,25 @@ class FileCache extends BaseCache
             return false;
         }
 
-        if ($this->keys[$key] > 0 && $this->keys[$key] < time()) {
-            return false;
-        }
-
         $filePath = $this->getFilePath($key);
-        if (false === file_exists($filePath) || false === filemtime($filePath)) {
+        if (false === file_exists($filePath)) {
             return false;
         }
 
         return true;
+    }
+
+    /**
+     * Checks if a given cache key is expired.
+     *
+     * @param string $key The key.
+     *
+     * @return bool Whether the key is expired.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _expired($key) {
+        return ($this->keys[$key] > 0 && $this->keys[$key] < time());
     }
 
     /**
@@ -130,10 +139,7 @@ class FileCache extends BaseCache
     protected function _delete($key)
     {
         if ($this->_exists($key)) {
-            $filePath = $this->getFilePath($key);
-            if (file_exists($filePath)) {
-                return unlink($filePath);
-            }
+            return unlink($this->getFilePath($key));
         }
 
         return true;

@@ -26,7 +26,7 @@ abstract class BaseCache extends \Cache
     /**
      * Protected constructor.
      *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
     protected function __construct()
     {
@@ -36,7 +36,7 @@ abstract class BaseCache extends \Cache
     /**
      * Protected cloner.
      *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
     protected function __clone()
     {
@@ -48,7 +48,7 @@ abstract class BaseCache extends \Cache
      *
      * @return static The instance.
      *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getInstance()
     {
@@ -69,9 +69,7 @@ abstract class BaseCache extends \Cache
      *
      * @return string
      *
-     * @see FileCache::getKeyName() The duplication because of the problem of the overriding core classes.
-     *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public function getKeyName($method, array $params = [], $version = 1)
     {

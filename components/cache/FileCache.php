@@ -14,23 +14,32 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * File cache system.
  *
- * @version 0.3.0
+ * @version 0.9.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-class FileCache extends \CacheFs
+class FileCache extends BaseCache
 {
     /** @var static Instance. */
     protected static $instance;
 
     /**
-     * Protected cloner.
+     * Protected constructor.
      *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
-    protected function __clone()
+    protected function __construct()
     {
-        // The realization do not need.
+        parent::__construct();
+
+        if (false === file_exists(_PS_CACHEFS_DIRECTORY_)) {
+            @mkdir(_PS_CACHEFS_DIRECTORY_, 0777, true);
+        }
+
+        $filePath = $this->getFilePath(static::KEYS_NAME);
+        if (file_exists($filePath)) {
+            $this->keys = unserialize(file_get_contents($filePath));
+        }
     }
 
     /**
@@ -38,7 +47,7 @@ class FileCache extends \CacheFs
      *
      * @return static The instance.
      *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getInstance()
     {
@@ -50,20 +59,105 @@ class FileCache extends \CacheFs
     }
 
     /**
-     * Returns a key name for a data caching.
+     * Returns a file path to a cache by a given key.
      *
-     * @param string $method  The method name, i.e. __METHOD__.
-     * @param array  $params  Parameters for the key name.
-     * @param int    $version The parameter for the cache versioning.
+     * @param string $key The key.
      *
-     * @return string
+     * @return string File path.
      *
-     * @see BaseCache::getKeyName() The base method, but this one is duplication because of the problem of the overriding core classes.
-     *
-     * Maksim T. <zapalm@yandex.com>
+     * @author Maksim T. <zapalm@yandex.com>
      */
-    public function getKeyName($method, array $params = [], $version = 1)
+    protected function getFilePath($key)
     {
-        return $method . '::' . serialize($params) . '::v' . $version;
+        return _PS_CACHEFS_DIRECTORY_ . md5($key) . '.ser';
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _set($key, $value, $ttl = 0)
+    {
+        return (false !== file_put_contents($this->getFilePath($key), serialize($value)));
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _get($key)
+    {
+        if (false === $this->_exists($key)) {
+            return false;
+        }
+
+        $filePath = $this->getFilePath($key);
+        $data     = file_get_contents($filePath);
+
+        return unserialize($data);
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _exists($key)
+    {
+        if (false === isset($this->keys[$key])) {
+            return false;
+        }
+
+        if ($this->keys[$key] > 0 && $this->keys[$key] < time()) {
+            return false;
+        }
+
+        $filePath = $this->getFilePath($key);
+        if (false === file_exists($filePath) || false === filemtime($filePath)) {
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _delete($key)
+    {
+        if ($this->_exists($key)) {
+            $filePath = $this->getFilePath($key);
+            if (file_exists($filePath)) {
+                return unlink($filePath);
+            }
+        }
+
+        return true;
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    protected function _writeKeys()
+    {
+        file_put_contents($this->getFilePath(static::KEYS_NAME), serialize($this->keys));
+    }
+
+    /**
+     * @inheritDoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function flush()
+    {
+        \Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
+
+        return true;
     }
 }

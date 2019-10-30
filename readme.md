@@ -19,6 +19,7 @@ With these helpers some programming tasks becomes more simple and done faster.
 - TranslateHelper
 - UrlHelper
 - ValidateHelper
+- ProductHelper
 
 **Controller list:**
 - BaseModuleFrontController.php

@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * Cache provider.
  *
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -34,5 +34,21 @@ class CacheProvider
         } else {
             return FileCache::getInstance();
         }
+    }
+
+    /**
+     * Returns a key name for a data caching.
+     *
+     * @param string $method  The method name, i.e. __METHOD__.
+     * @param array  $params  Parameters for the key name.
+     * @param int    $version The parameter for the cache versioning.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getKeyName($method, array $params = [], $version = 1)
+    {
+        return $method . '::' . serialize($params) . '::v' . $version;
     }
 }

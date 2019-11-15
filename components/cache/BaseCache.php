@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * Base class of a cache system.
  *
- * @version 0.4.0
+ * @version 0.3.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -58,21 +58,5 @@ abstract class BaseCache extends \Cache
         }
 
         return static::$instance;
-    }
-
-    /**
-     * Returns a key name for a data caching.
-     *
-     * @param string $method  The method name, i.e. __METHOD__.
-     * @param array  $params  Parameters for the key name.
-     * @param int    $version The parameter for the cache versioning.
-     *
-     * @return string
-     *
-     * @author Maksim T. <zapalm@yandex.com>
-     */
-    public function getKeyName($method, array $params = [], $version = 1)
-    {
-        return $method . '::' . serialize($params) . '::v' . $version;
     }
 }

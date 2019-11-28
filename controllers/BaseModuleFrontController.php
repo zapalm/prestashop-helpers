@@ -102,7 +102,7 @@ class BaseModuleFrontController extends \ModuleFrontController
     protected function l($text, $fileName = false, $class = null, $addslashes = false, $htmlentities = true)
     {
         if (false === $fileName) {
-            if (null === $this->php_self) {
+            if (false === isset($this->php_self)) { // Sometimes it can be declared, but has null value.
                 $fileName = str_replace(strtolower(\ModuleFrontController::class), '', strtolower(static::class));
                 $fileName = str_replace(strtolower($this->module->name), '', $fileName);
             } else {

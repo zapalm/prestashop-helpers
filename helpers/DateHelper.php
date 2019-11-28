@@ -43,4 +43,23 @@ class DateHelper {
 
     /** Seconds in a year. */
     const SEC_IN_YEAR = 31536000;
+
+    /**
+     * Returns a title of a day according to the current language.
+     *
+     * @param \DateTime|null $dateTime        The DateTime object or null to use the current day.
+     * @param string|null    $languageIsoCode The language ISO code or null to get it automatically from the context.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getDayTitle(\DateTime $dateTime = null, $languageIsoCode = null)
+    {
+        if (null === $dateTime) {
+            $dateTime = new DateTime();
+        }
+
+        return TranslateHelper::translate($dateTime->format('l'), static::class, $languageIsoCode);
+    }
 }

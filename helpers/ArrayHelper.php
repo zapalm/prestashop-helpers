@@ -199,8 +199,15 @@ class ArrayHelper
     {
         $result = [];
         foreach ($array as $key => $item) {
-            if (is_object($item) && property_exists($item, $column)) {
-                $value = $item->$column;
+            if (is_object($item)) {
+                $getter = 'get' . $column;
+                if (method_exists($item, $getter)) {
+                    $value = $item->$getter();
+                } elseif (property_exists($item, $column)) {
+                    $value = $item->$column;
+                } else {
+                    continue;
+                }
             } elseif (isset($item[$column])) {
                 $value = $item[$column];
             } else {

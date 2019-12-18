@@ -49,6 +49,6 @@ class CacheProvider
      */
     public static function getKeyName($method, array $params = [], $version = 1)
     {
-        return $method . '::' . serialize($params) . '::v' . $version;
+        return $method . ':' . implode(':', $params) . ':v' . $version;
     }
 }

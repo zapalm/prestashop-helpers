@@ -203,7 +203,7 @@ class ArrayHelper
                 $getter = 'get' . $column;
                 if (method_exists($item, $getter)) {
                     $value = $item->$getter();
-                } elseif (property_exists($item, $column)) {
+                } elseif (isset($item->$column) || property_exists($item, $column)) { // Checking magic and regular properties both
                     $value = $item->$column;
                 } else {
                     continue;

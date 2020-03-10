@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.6.0
+ * @version 0.8.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -109,6 +109,30 @@ class UrlHelper
         }
 
         return \Context::getContext()->shop->getBaseURL(true) . basename(_PS_ADMIN_DIR_) . '/';
+    }
+
+    /**
+     * Returns an URL to the upload directory.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getUploadUrl()
+    {
+        return \Context::getContext()->shop->getBaseURL(true) . 'upload/';
+    }
+
+    /**
+     * Returns an URL to the download directory.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getDownloadUrl()
+    {
+        return \Context::getContext()->shop->getBaseURL(true) . 'download/';
     }
 
     /**

@@ -98,21 +98,30 @@ class FileHelper
      *
      * @param string $dir The directory to calculate it's size.
      *
-     * @return int The size in Bytes.
+     * @return int|bool The size in Bytes or false on an error.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getDirectorySize($dir){
-        $bytes = 0;
-
+    public static function getDirectorySize($dir)
+    {
         $dir = realpath($dir);
-        if (false !== $dir) {
-            foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)) as $iterator) {
-                $bytes += $iterator->getSize();
-            }
+        if (false === $dir) {
+            return false;
         }
 
-        return $bytes;
+        $result = 0;
+        foreach (new \RecursiveIteratorIterator(new \RecursiveDirectoryIterator($dir, \FilesystemIterator::SKIP_DOTS)) as $iterator) {
+            $bytes = $iterator->getSize();
+
+            // It can return a negative value for a large file size: https://bugs.php.net/bug.php?id=54758
+            if ($bytes < 0) {
+                return false;
+            }
+
+            $result += $bytes;
+        }
+
+        return $result;
     }
 
     /**

@@ -11,6 +11,9 @@
 
 namespace zapalm\prestashopHelpers\components\cache;
 
+use CacheMemcache;
+use CacheMemcached;
+
 /**
  * Cache provider.
  *
@@ -20,20 +23,40 @@ namespace zapalm\prestashopHelpers\components\cache;
  */
 class CacheProvider
 {
+    /** Caching system: File cache (storage in a file system). */
+    const SYSTEM_FILECACHE = FileCache::class;
+
+    /** Caching system: Memcache. */
+    const SYSTEM_MEMCACHE  = CacheMemcache::class;
+
+    /** Caching system: Memcached. */
+    const SYSTEM_MEMCACHED = CacheMemcached::class;
+
     /**
-     * Returns an instance of a system wide cache system or FileCache system if the first one is disabled.
+     * Returns an instance of a cache system.
+     *
+     * @param bool   $useSystemWideCaching     Whether to use system wide caching.
+     * @param string $preferredSystemClassName The preferred caching system to use If the system wide caching system is not used (see constants). If the preferred system cannot be used then FileCache system will be used.
      *
      * @return BaseCache|FileCache Cache system.
      *
      * Maksim T. <zapalm@yandex.com>
      */
-    public static function getInstance()
+    public static function getInstance($useSystemWideCaching = true, $preferredSystemClassName = self::SYSTEM_FILECACHE)
     {
-        if (true === (bool)_PS_CACHE_ENABLED_) {
-            return BaseCache::getInstance();
-        } else {
-            return FileCache::getInstance();
+        if ($useSystemWideCaching && true === (bool)_PS_CACHE_ENABLED_) {
+            BaseCache::setCachingSystemClassName(_PS_CACHING_SYSTEM_);
         }
+
+        if (false === $useSystemWideCaching && in_array($preferredSystemClassName, [self::SYSTEM_MEMCACHE, self::SYSTEM_MEMCACHED])) {
+            BaseCache::setCachingSystemClassName($preferredSystemClassName);
+        }
+
+        if (null !== BaseCache::getCachingSystemClassName()) {
+            return BaseCache::getInstance();
+        }
+
+        return FileCache::getInstance();
     }
 
     /**

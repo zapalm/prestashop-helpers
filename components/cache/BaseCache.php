@@ -79,7 +79,7 @@ abstract class BaseCache extends \Cache
     }
 
     /**
-     * Gets a caching system class name.
+     * Returns a caching system class name.
      *
      * @return string The class name.
      *

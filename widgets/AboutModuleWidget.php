@@ -151,7 +151,7 @@ class AboutModuleWidget
                             <span><b>' . $this->module->l('Version') . ':</b> ' . $this->module->version . '</span><br>
                             <span><b>' . $this->module->l('License') . ':</b> ' . $licenseHtml . '</span><br>
                             <span><b>' . $this->module->l('Website') . ':</b> ' . $websiteHtml . '</span><br>
-                            <span><b>' . $this->module->l('Author') . ':</b> ' . $authorHtml . ' <br><br>
+                            <span><b>' . $this->module->l('Author') . ':</b> ' . $authorHtml . '</span><br><br>
                         </div>
                         <div class="form-group col-lg-2" style="display: block; clear: none !important; float: left; width: 16.6%;">
                             <img width="250" alt="' . $this->module->l('Website') . '" src="' . FormHelper::encode($siteLogoUrl) . '">

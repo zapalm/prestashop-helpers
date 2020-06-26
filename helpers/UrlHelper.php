@@ -138,7 +138,7 @@ class UrlHelper
     /**
      * Returns a domain name of a shop.
      *
-     * This is the analog of Tools::getShopDomain(), but it is works from PrestaShop 1.3 to the last one.
+     * This is the analog of Tools::getShopDomain(), but it works in all versions of PrestaShop.
      *
      * @param bool $appendHttpProtocol       Whether to return the domain name with HTTP protocol.
      * @param bool $convertSpecialCharacters Whether to convert special characters to HTML entities.
@@ -154,7 +154,7 @@ class UrlHelper
         }
 
         $domain = \Configuration::get('PS_SHOP_DOMAIN');
-        if (false !== $domain) {
+        if (false === $domain) {
             $domain = \Tools::getHttpHost();
         }
 

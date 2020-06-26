@@ -79,7 +79,7 @@ public function example() {
     $this->log('An error occupied.');
 }
 public function log($messages, $level = AbstractLogger::WARNING) {
-    LogHelper::log($messages, $level, $this->displayName, $this->id);
+    LogHelper::log($messages, $level, $this->l('A module category example'), $this->id);
 }
 ~~~
 

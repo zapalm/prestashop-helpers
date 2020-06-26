@@ -31,13 +31,13 @@ class LogHelper
      *     $this->log('An error occupied.');
      * }
      * public function log($messages, $level = AbstractLogger::WARNING) {
-     *     LogHelper::log($messages, $level, $this->displayName, $this->id);
+     *     LogHelper::log($messages, $level, $this->l('A module category example'), $this->id);
      * }
      * ~~~
      *
      * @param string|string[] $messages     The message or messages to be logged.
      * @param int             $level        The level of the message.
-     * @param string          $categoryName The category name. For example, the module title.
+     * @param string          $categoryName The category name. For example, the module title. Note the name will be validated by {@see Validate::isName()}, i.e. you can mostly use only letters (you can't use numbers and special symbols).
      * @param int             $categoryId   The category ID. For example, the module ID.
      *
      * @throws \UnexpectedValueException

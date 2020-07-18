@@ -358,7 +358,7 @@ class ValidateHelper extends \Validate
      */
     public static function isEmail($email)
     {
-        // ThirtyBees don't check for an empty value
+        // Check for an empty value
         if (static::isEmpty($email)) {
             return false;
         }

@@ -23,8 +23,6 @@ class LogHelper
     /**
      * Logs a message with the given level and category.
      *
-     * Works in PrestaShop 1.5 and greater.
-     *
      * For example, how to use in a module:
      * ~~~
      * public function example() {
@@ -45,12 +43,7 @@ class LogHelper
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function log($messages, $level = \AbstractLogger::WARNING, $categoryName = 'Application', $categoryId = 1) {
-        if (version_compare(_PS_VERSION_, '1.5.0.0', '<')) {
-            // In PrestaShop 1.4 there is an autoload problem, so sometimes AbstractLogger class not loaded
-            // by PrestaShop autoloader and this issue not solves by this method.
-            // In PrestaShop 1.3 and below the logger is not exists.
-            return;
-        } elseif (version_compare(_PS_VERSION_, '1.6.0.0', '<')) {
+        if (version_compare(_PS_VERSION_, '1.6.0.0', '<')) {
             $loggerClass = \Logger::class;
         } else {
             $loggerClass = \PrestaShopLogger::class;

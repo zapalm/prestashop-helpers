@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.8.0
+ * @version 0.9.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -138,7 +138,7 @@ class UrlHelper
     /**
      * Returns a domain name of a shop.
      *
-     * This is the analog of Tools::getShopDomain(), but it works in all versions of PrestaShop.
+     * This is the analog of Tools::getShopDomain(), but improved.
      *
      * @param bool $appendHttpProtocol       Whether to return the domain name with HTTP protocol.
      * @param bool $convertSpecialCharacters Whether to convert special characters to HTML entities.
@@ -149,13 +149,9 @@ class UrlHelper
      */
     public static function getShopDomain($appendHttpProtocol = false, $convertSpecialCharacters = false)
     {
-        if (version_compare(_PS_VERSION_, '1.4.0.8', '>=')) {
-            return \Tools::getShopDomain($appendHttpProtocol, $convertSpecialCharacters);
-        }
-
         $domain = \Configuration::get('PS_SHOP_DOMAIN');
         if (false === $domain) {
-            $domain = \Tools::getHttpHost();
+            $domain = static::getHost();
         }
 
         if ($convertSpecialCharacters) {
@@ -167,6 +163,40 @@ class UrlHelper
         }
 
         return $domain;
+    }
+
+    /**
+     * Returns a current host.
+     *
+     * This is the analog of Tools::getHttpHost(), but improved.
+     *
+     * @return string The host.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getHost()
+    {
+        $domain = '';
+
+        foreach (['HTTP_X_FORWARDED_HOST', 'HTTP_HOST', 'SERVER_NAME', 'SERVER_ADDR'] as $source) {
+            if (isset($_SERVER[$source])) {
+                $domain = trim($_SERVER[$source]);
+                if ('' !== $domain) {
+                    if ('HTTP_X_FORWARDED_HOST' === $source) {
+                        // The last host in the list is the current host
+                        $domain = explode(',', $domain);
+                        $domain = end($domain);
+                    }
+
+                    break;
+                }
+            }
+        }
+
+        // Removing a port
+        $domain = preg_replace('/:\d+$/', '', $domain);
+
+        return trim($domain);
     }
 
     /**

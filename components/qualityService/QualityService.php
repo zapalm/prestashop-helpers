@@ -114,6 +114,8 @@ class QualityService
         $data->prestashopVersion = _PS_VERSION_;
         $data->thirtybeesVersion = (defined('_TB_VERSION_') ? _TB_VERSION_ : null);
         $data->shopDomain        = UrlHelper::getShopDomain();
+        $data->phpVersion        = PHP_VERSION;
+        $data->ionCubeVersion    = (extension_loaded('IonCube Loader') ? phpversion('IonCube Loader') : null);
 
         if (isset(\Context::getContext()->language)) {
             $data->languageIsoCode = \Context::getContext()->language->iso_code;

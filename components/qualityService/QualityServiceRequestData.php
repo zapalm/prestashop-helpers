@@ -53,4 +53,10 @@ class QualityServiceRequestData
 
     /** @var string The version of ThirtyBees. */
     public $thirtybeesVersion;
+
+    /** @var string The version of PHP. */
+    public $phpVersion;
+
+    /** @var string The version of IonCube. */
+    public $ionCubeVersion;
 }

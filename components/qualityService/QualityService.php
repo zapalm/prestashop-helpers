@@ -116,15 +116,7 @@ class QualityService
         $data->shopDomain        = UrlHelper::getShopDomain();
         $data->phpVersion        = PHP_VERSION;
         $data->ionCubeVersion    = (extension_loaded('IonCube Loader') ? phpversion('IonCube Loader') : null);
-
-        if (isset(\Context::getContext()->language)) {
-            $data->languageIsoCode = \Context::getContext()->language->iso_code;
-        } else {
-            global $cookie; /** @var \Cookie $cookie */
-            if (isset($cookie->id_lang)) {
-                $data->languageIsoCode = (string)\Language::getIsoById($cookie->id_lang);
-            }
-        }
+        $data->languageIsoCode   = \Context::getContext()->language->iso_code;
 
         // This public e-mail from a shop's contacts can be used by a developer to send only an urgent information about
         // security issue of a module!

@@ -25,19 +25,19 @@ class ProductHelper
      *
      * Stock remains of a product must be checked separately from this method.
      *
-     * @param \Product $product The product to check.
+     * @param \Product|\stdClass $product The product object to check.
      *
      * @return bool
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function isProductAvailableWhenOutOfStock(\Product $product)
+    public static function isProductAvailableWhenOutOfStock($product)
     {
         if (false === (bool)$product->available_for_order) {
             return false;
         }
 
-        if ($product->isFullyLoaded) {
+        if (null !== $product->out_of_stock) {
             $productOutOfStock = (int)$product->out_of_stock;
         } else {
             $productOutOfStock = \StockAvailable::outOfStock($product->id);

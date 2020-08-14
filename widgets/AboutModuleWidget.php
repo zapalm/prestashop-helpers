@@ -11,6 +11,11 @@
 
 namespace zapalm\prestashopHelpers\widgets;
 
+use Context;
+use Exception;
+use Language;
+use LogicException;
+use Module;
 use zapalm\prestashopHelpers\helpers\FormHelper;
 use zapalm\prestashopHelpers\helpers\TranslateHelper;
 
@@ -71,17 +76,17 @@ class AboutModuleWidget
     /** @var string Author icon URI */
     protected $authorIconUri = 'img/zapalm24x24.jpg';
 
-    /** @var \Module Module */
+    /** @var Module Module */
     protected $module;
 
     /**
      * Constructor.
      *
-     * @param \Module $module The module.
+     * @param Module $module The module.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public function __construct(\Module $module)
+    public function __construct(Module $module)
     {
         $this->module = $module;
     }
@@ -99,7 +104,7 @@ class AboutModuleWidget
     {
         try {
             return $this->render();
-        } catch (\Exception $e) {
+        } catch (Exception $e) {
             return $e->getMessage(); // Because method __toString() must not throw an exception
         }
     }
@@ -109,25 +114,25 @@ class AboutModuleWidget
      *
      * @return string
      *
-     * @throws \LogicException When the configuration of the object is invalid.
+     * @throws LogicException When the configuration of the object is invalid.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function render()
     {
         $siteLanguageUri = '/en/';
-        if (\Language::getIsoById(\Context::getContext()->cookie->id_lang) === $this->mainLanguageIsoCode) {
+        if (Language::getIsoById(Context::getContext()->cookie->id_lang) === $this->mainLanguageIsoCode) {
             $siteLanguageUri = '/' . $this->mainLanguageIsoCode . '/';
         }
 
         $siteUrlByLanguage = $this->siteUrl . $siteLanguageUri;
         if (false === filter_var($siteUrlByLanguage, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: site URL.');
+            throw new LogicException('Invalid configuration: site URL.');
         }
 
         $moduleUrl = $siteUrlByLanguage . $this->moduleUri;
         if (false === filter_var($moduleUrl, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: module URI.');
+            throw new LogicException('Invalid configuration: module URI.');
         }
 
         $websiteHtml = '
@@ -144,7 +149,7 @@ class AboutModuleWidget
         $licenseHtml = $this->licenseTitle;
         if (null !== $this->licenseUrl) {
             if (false === filter_var($this->licenseUrl, FILTER_VALIDATE_URL)) {
-                throw new \LogicException('Invalid configuration: license URL.');
+                throw new LogicException('Invalid configuration: license URL.');
             }
 
             $licenseHtml = '
@@ -158,7 +163,7 @@ class AboutModuleWidget
         if (null !== $this->authorIconUri) {
             $authorIconUrl = $this->siteUrl . '/' . $this->authorIconUri;
             if (false === filter_var($authorIconUrl, FILTER_VALIDATE_URL)) {
-                throw new \LogicException('Invalid configuration: author icon URI.');
+                throw new LogicException('Invalid configuration: author icon URI.');
             }
 
             $authorHtml .= ' <img src="' . FormHelper::encode($authorIconUrl) . '" alt="' . $this->translate('Author') . '" width="24" height="24">';
@@ -166,7 +171,7 @@ class AboutModuleWidget
 
         $siteLogoUrl = $this->siteUrl . '/' . $this->siteLogoUri;
         if (false === filter_var($siteLogoUrl, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: site logo URI.');
+            throw new LogicException('Invalid configuration: site logo URI.');
         }
 
         $content =

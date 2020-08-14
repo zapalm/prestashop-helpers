@@ -22,7 +22,7 @@ use zapalm\prestashopHelpers\helpers\TranslateHelper;
 /**
  * About module widget.
  *
- * @version 0.11.0
+ * @version 0.12.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */

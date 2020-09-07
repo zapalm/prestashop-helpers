@@ -73,14 +73,14 @@ class ArrayHelper
 
         foreach ($data as $item) {
             if (null !== $valueToPick && is_array($item)) {
-                $dataToSave = [];
-                foreach ($item as $key => $value) {
-                    if (is_array($valueToPick)) {
-                        if (array_key_exists($key, $valueToPick)) {
+                if (false === is_array($valueToPick) && isset($item[$valueToPick])) {
+                    $dataToSave = $item[$valueToPick];
+                } else {
+                    $dataToSave = [];
+                    foreach ($item as $key => $value) {
+                        if (isset($valueToPick[$key])) {
                             $dataToSave[$key] = $value;
                         }
-                    } else {
-                        $dataToSave = $value;
                     }
                 }
             } else {

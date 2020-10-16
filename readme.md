@@ -1,5 +1,5 @@
 # Helper classes for PrestaShop CMS
-Full documented helper classes for PrestaShop CMS.
+Full documented helper classes for PrestaShop CMS (1.7, 1.6, 1.5).
 With these helpers some programming tasks becomes more simple and done faster.
 [The library homepage][5].
 
@@ -79,7 +79,7 @@ public function example() {
     $this->log('An error occupied.');
 }
 public function log($messages, $level = AbstractLogger::WARNING) {
-    LogHelper::log($messages, $level, $this->displayName, $this->id);
+    LogHelper::log($messages, $level, $this->l('A module category example'), $this->id);
 }
 ~~~
 
@@ -108,6 +108,26 @@ $path   = '/var/www/prestashop/modules/homecategoriez/classes';
 $module = ModuleHelper::getInstanceByPath($path); /** @var HomeCategoriez $module The instance of the module: HomeCategoriez */
 ~~~
 
+**FileHelper**, getting a real maximum file size that can be uploaded to a site.
+~~~
+$sizeInBytes = FileHelper::getFileSizeUploadLimit();
+~~~
+
+**Cache component**, caching a DB query result. 
+~~~
+public function getAllCustomers() {
+    $cacheKey = CacheProvider::getKeyName(__METHOD__);
+
+    $data = CacheProvider::getInstance()->get($cacheKey);
+    if (false === $data) {
+        $data = Db::getInstance()->executeS('SELECT * FROM ps_customer', true, false);
+        CacheProvider::getInstance()->set($cacheKey, $data, 60 * 60 * 24);
+    }
+
+    return $data;
+}
+~~~
+
 **Autoloader**, using Composer's autoloader to automatically load PHP classes, for example, *in a module* by adding classmap to your `composer.json` file.
 ~~~
 "autoload": {
@@ -128,7 +148,7 @@ Add the dependency directly to your `composer.json` file:
   }
 ],
 "require": {
-  "php": ">=5.4",
+  "php": ">=5.5",
   "zapalm/prestashopHelpers": "dev-master"
 },
 ```

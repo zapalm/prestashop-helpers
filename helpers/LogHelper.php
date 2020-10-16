@@ -23,21 +23,19 @@ class LogHelper
     /**
      * Logs a message with the given level and category.
      *
-     * Works in PrestaShop 1.6 and greater.
-     *
      * For example, how to use in a module:
      * ~~~
      * public function example() {
      *     $this->log('An error occupied.');
      * }
      * public function log($messages, $level = AbstractLogger::WARNING) {
-     *     LogHelper::log($messages, $level, $this->displayName, $this->id);
+     *     LogHelper::log($messages, $level, $this->l('A module category example'), $this->id);
      * }
      * ~~~
      *
      * @param string|string[] $messages     The message or messages to be logged.
      * @param int             $level        The level of the message.
-     * @param string          $categoryName The category name. For example, the module title.
+     * @param string          $categoryName The category name. For example, the module title. Note the name will be validated by {@see Validate::isName()}, i.e. you can mostly use only letters (you can't use numbers and special symbols).
      * @param int             $categoryId   The category ID. For example, the module ID.
      *
      * @throws \UnexpectedValueException
@@ -45,8 +43,10 @@ class LogHelper
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function log($messages, $level = \AbstractLogger::WARNING, $categoryName = 'Application', $categoryId = 1) {
-        if (version_compare(_PS_VERSION_, '1.6', '<')) {
-            return;
+        if (version_compare(_PS_VERSION_, '1.6.0.0', '<')) {
+            $loggerClass = \Logger::class;
+        } else {
+            $loggerClass = \PrestaShopLogger::class;
         }
 
         if (false === in_array($level, array(
@@ -66,7 +66,7 @@ class LogHelper
             $message = str_replace(array("\n", "\r"), ' ', $message);
             $message = strip_tags($message);
 
-            \PrestaShopLogger::addLog(
+            $loggerClass::addLog( /** @var \PrestaShopLogger|\Logger $loggerClass */
                 $message,
                 $level,
                 null,

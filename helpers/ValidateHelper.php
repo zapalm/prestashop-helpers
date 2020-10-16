@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Validate helper.
  *
- * @version 0.14.0
+ * @version 0.15.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -230,6 +230,8 @@ class ValidateHelper extends \Validate
     const VALIDATOR_PUNYCODE                    = 'isPunycode';
     /** Validator name to check whether a domain is in Punycode */
     const VALIDATOR_PUNYCODE_DOMAIN             = 'isPunycodeDomain';
+    /** Validator name to check whether a value is correct Mobile phone number */
+    const VALIDATOR_MOBILE_PHONE_NUMBER         = 'isMobilePhoneNumber';
 
     /**
      * Returns whether a value is correct identifier.
@@ -356,7 +358,7 @@ class ValidateHelper extends \Validate
      */
     public static function isEmail($email)
     {
-        // ThirtyBees don't check for an empty value
+        // Check for an empty value
         if (static::isEmpty($email)) {
             return false;
         }
@@ -543,5 +545,29 @@ class ValidateHelper extends \Validate
 
         // Calling the method of the base class, because of a possible recursion.
         return (bool)\ValidateCore::isUrl($value);
+    }
+
+    /**
+     * Checks if the given value is a mobile phone number.
+     *
+     * @param string $phoneNumber The value to check.
+     *
+     * @return bool Whether the value is a mobile phone number.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function isMobilePhoneNumber($phoneNumber)
+    {
+        if (static::isPhoneNumber($phoneNumber)) {
+            $phoneNumber = preg_replace('/[^+0-9]+/', '', $phoneNumber);
+
+            // Maximum length is 15: https://stackoverflow.com/a/4729239/1856214
+            // Minimum length is 8: https://stackoverflow.com/a/17814276/1856214
+            if (strlen($phoneNumber) > 7 && strlen($phoneNumber) < 16) {
+                return true;
+            }
+        }
+
+        return false;
     }
 }

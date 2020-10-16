@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Date helper.
  *
- * @version 0.1.0
+ * @version 0.2.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -61,5 +61,27 @@ class DateHelper {
         }
 
         return TranslateHelper::translate($dateTime->format('l'), static::class, $languageIsoCode);
+    }
+
+    /**
+     * Returns a title of a month according to the current language.
+     *
+     * @param \DateTime|null $dateTime        The DateTime object or null to use the current month.
+     * @param string|null    $languageIsoCode The language ISO code or null to get it automatically from the context.
+     * @param string|null    $prefix          The prefix, for example: 'of', 'in' and etc. It is usable for a correct translation with a declination.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getMonthTitle(\DateTime $dateTime = null, $languageIsoCode = null, $prefix = null)
+    {
+        if (null === $dateTime) {
+            $dateTime = new DateTime();
+        }
+
+        $title = trim($prefix . ' ' . $dateTime->format('F'));
+
+        return TranslateHelper::translate($title, static::class, $languageIsoCode);
     }
 }

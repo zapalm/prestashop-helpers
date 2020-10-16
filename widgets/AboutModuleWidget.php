@@ -11,12 +11,18 @@
 
 namespace zapalm\prestashopHelpers\widgets;
 
+use Context;
+use Exception;
+use Language;
+use LogicException;
+use Module;
 use zapalm\prestashopHelpers\helpers\FormHelper;
+use zapalm\prestashopHelpers\helpers\TranslateHelper;
 
 /**
  * About module widget.
  *
- * @version 0.11.0
+ * @version 0.12.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -24,6 +30,27 @@ class AboutModuleWidget
 {
     /** License: Academic Free License (AFL 3.0) */
     const LICENSE_AFL30 = 'Academic Free License (AFL 3.0)';
+
+    /** License: Open Software License (OSL 3.0) */
+    const LICENSE_OSL30 = 'Open Software License (OSL 3.0)';
+
+    /** License: GNU General Public License (GNU 3.0) */
+    const LICENSE_GNU30 = 'GNU General Public License (GNU 3.0)';
+
+    /** License: MIT License */
+    const LICENSE_MIT = 'MIT License';
+
+    /** License: Open-source license */
+    const LICENSE_OPEN_SOURCE = 'Open-source license';
+
+    /** License: Proprietary license */
+    const LICENSE_PROPRIETARY = 'Proprietary license';
+
+    /** License: Proprietary license for closed-source software */
+    const LICENSE_PROPRIETARY_CLOSED_SOURCE = 'Proprietary license for closed-source software';
+
+    /** License: Proprietary license for source-available software */
+    const LICENSE_PROPRIETARY_SOURCE_AVAILABLE = 'Proprietary license for source-available software';
 
     /** @var string Site URL */
     protected $siteUrl = 'https://prestashop.modulez.ru';
@@ -38,7 +65,7 @@ class AboutModuleWidget
     protected $mainLanguageIsoCode = 'ru';
 
     /** @var string License title */
-    protected $licenseTitle = self::LICENSE_AFL30;
+    protected $licenseTitle;
 
     /** @var string License URL */
     protected $licenseUrl;
@@ -49,17 +76,17 @@ class AboutModuleWidget
     /** @var string Author icon URI */
     protected $authorIconUri = 'img/zapalm24x24.jpg';
 
-    /** @var \Module Module */
+    /** @var Module Module */
     protected $module;
 
     /**
      * Constructor.
      *
-     * @param \Module $module The module.
+     * @param Module $module The module.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public function __construct(\Module $module)
+    public function __construct(Module $module)
     {
         $this->module = $module;
     }
@@ -75,7 +102,11 @@ class AboutModuleWidget
      */
     public function __toString()
     {
-        return $this->render();
+        try {
+            return $this->render();
+        } catch (Exception $e) {
+            return $e->getMessage(); // Because method __toString() must not throw an exception
+        }
     }
 
     /**
@@ -83,25 +114,25 @@ class AboutModuleWidget
      *
      * @return string
      *
-     * @throws \LogicException When the configuration of the object is invalid.
+     * @throws LogicException When the configuration of the object is invalid.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function render()
     {
         $siteLanguageUri = '/en/';
-        if (\Language::getIsoById(\Context::getContext()->cookie->id_lang) === $this->mainLanguageIsoCode) {
+        if (Language::getIsoById(Context::getContext()->cookie->id_lang) === $this->mainLanguageIsoCode) {
             $siteLanguageUri = '/' . $this->mainLanguageIsoCode . '/';
         }
 
         $siteUrlByLanguage = $this->siteUrl . $siteLanguageUri;
         if (false === filter_var($siteUrlByLanguage, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: site URL.');
+            throw new LogicException('Invalid configuration: site URL.');
         }
 
         $moduleUrl = $siteUrlByLanguage . $this->moduleUri;
         if (false === filter_var($moduleUrl, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: module URI.');
+            throw new LogicException('Invalid configuration: module URI.');
         }
 
         $websiteHtml = '
@@ -110,10 +141,15 @@ class AboutModuleWidget
             </a>
         ';
 
+        if (null === $this->licenseTitle && null === $this->licenseUrl) {
+            $this->setLicenseTitle(static::LICENSE_OPEN_SOURCE);
+            $this->setLicenseUrl('https://prestashop.modulez.ru/en/content/3-terms-and-conditions-of-use#open-source-license');
+        }
+
         $licenseHtml = $this->licenseTitle;
         if (null !== $this->licenseUrl) {
-            if (0 === preg_match('/^\@\S+\@$/', $this->licenseUrl) && false === filter_var($this->licenseUrl, FILTER_VALIDATE_URL)) {
-                throw new \LogicException('Invalid configuration: license URL.');
+            if (false === filter_var($this->licenseUrl, FILTER_VALIDATE_URL)) {
+                throw new LogicException('Invalid configuration: license URL.');
             }
 
             $licenseHtml = '
@@ -127,34 +163,34 @@ class AboutModuleWidget
         if (null !== $this->authorIconUri) {
             $authorIconUrl = $this->siteUrl . '/' . $this->authorIconUri;
             if (false === filter_var($authorIconUrl, FILTER_VALIDATE_URL)) {
-                throw new \LogicException('Invalid configuration: author icon URI.');
+                throw new LogicException('Invalid configuration: author icon URI.');
             }
 
-            $authorHtml .= ' <img src="' . FormHelper::encode($authorIconUrl) . '" alt="' . $this->module->l('Author') . '" width="24" height="24">';
+            $authorHtml .= ' <img src="' . FormHelper::encode($authorIconUrl) . '" alt="' . $this->translate('Author') . '" width="24" height="24">';
         }
 
         $siteLogoUrl = $this->siteUrl . '/' . $this->siteLogoUri;
         if (false === filter_var($siteLogoUrl, FILTER_VALIDATE_URL)) {
-            throw new \LogicException('Invalid configuration: site logo URI.');
+            throw new LogicException('Invalid configuration: site logo URI.');
         }
 
         $content =
             (version_compare(_PS_VERSION_, '1.6', '<') ? '<br class="clear">' : '') . '
             <div class="panel">
                 <div class="panel-heading">
-                    <img src="' . $this->module->getPathUri() . 'logo.png" width="16" height="16">
-                    ' . $this->module->l('Module info') . '
+                    <img src="' . $this->module->getPathUri() . 'logo.png" width="16" height="16" alt="">
+                    ' . $this->translate('Module info') . '
                 </div>
                 <div class="form-wrapper">
                     <div class="row">               
                         <div class="form-group col-lg-4" style="display: block; clear: none !important; float: left; width: 33.3%;">
-                            <span><b>' . $this->module->l('Version') . ':</b> ' . $this->module->version . '</span><br>
-                            <span><b>' . $this->module->l('License') . ':</b> ' . $licenseHtml . '</span><br>
-                            <span><b>' . $this->module->l('Website') . ':</b> ' . $websiteHtml . '</span><br>
-                            <span><b>' . $this->module->l('Author') . ':</b> ' . $authorHtml . ' <br><br>
+                            <span><b>' . $this->translate('Version') . ':</b> ' . $this->module->version . '</span><br>
+                            <span><b>' . $this->translate('License') . ':</b> ' . $licenseHtml . '</span><br>
+                            <span><b>' . $this->translate('Website') . ':</b> ' . $websiteHtml . '</span><br>
+                            <span><b>' . $this->translate('Author') . ':</b> ' . $authorHtml . '</span><br><br>
                         </div>
                         <div class="form-group col-lg-2" style="display: block; clear: none !important; float: left; width: 16.6%;">
-                            <img width="250" alt="' . $this->module->l('Website') . '" src="' . FormHelper::encode($siteLogoUrl) . '">
+                            <img width="250" alt="' . $this->translate('Website') . '" src="' . FormHelper::encode($siteLogoUrl) . '">
                         </div>
                     </div>
                 </div>
@@ -192,7 +228,11 @@ class AboutModuleWidget
      */
     public function setLicenseTitle($licenseTitle)
     {
-        $this->licenseTitle = $licenseTitle;
+        if ('@license_text@' === $licenseTitle) {
+            $this->licenseTitle = $this->translate(static::LICENSE_PROPRIETARY);
+        } else {
+            $this->licenseTitle = $this->translate($licenseTitle);
+        }
 
         return $this;
     }
@@ -256,7 +296,9 @@ class AboutModuleWidget
      */
     public function setLicenseUrl($licenseUrl)
     {
-        $this->licenseUrl = $licenseUrl;
+        if ($licenseUrl !== '@license_url@') {
+            $this->licenseUrl = $licenseUrl;
+        }
 
         return $this;
     }
@@ -291,5 +333,19 @@ class AboutModuleWidget
         $this->authorIconUri = $authorIconUri;
 
         return $this;
+    }
+
+    /**
+     * Translates a sentence.
+     *
+     * @param string $sentence The sentence.
+     *
+     * @return string The translated sentence or the same sentence if it was not translated before.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    private function translate($sentence)
+    {
+        return TranslateHelper::translate($sentence, static::class, null, __DIR__ . '/../translations');
     }
 }

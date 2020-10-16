@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * Base class of a cache system.
  *
- * @version 0.3.0
+ * @version 0.5.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -22,6 +22,9 @@ abstract class BaseCache extends \Cache
 {
     /** @var static Instance. */
     protected static $instance;
+
+    /** @var string Caching system class name. */
+    private static $cachingSystemClassName;
 
     /**
      * Protected constructor.
@@ -44,19 +47,46 @@ abstract class BaseCache extends \Cache
     }
 
     /**
-     * Returns an instance of FileCache system.
+     * Returns an instance of a cache system.
      *
      * @return static The instance.
+     *
+     * @see setCachingSystemClassName() To set a caching system class name.
+     *
+     * @throws \LogicException If a caching system class name was not set.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getInstance()
     {
         if (null === static::$instance) {
-            $cacheSystem = _PS_CACHING_SYSTEM_;
-            static::$instance = new $cacheSystem();
+            static::$instance = new static::$cachingSystemClassName();
         }
 
         return static::$instance;
+    }
+
+    /**
+     * Sets a caching system class name.
+     *
+     * @param string $className The class name.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function setCachingSystemClassName($className)
+    {
+        static::$cachingSystemClassName = $className;
+    }
+
+    /**
+     * Returns a caching system class name.
+     *
+     * @return string The class name.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getCachingSystemClassName()
+    {
+        return self::$cachingSystemClassName;
     }
 }

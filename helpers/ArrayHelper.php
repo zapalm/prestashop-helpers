@@ -73,14 +73,14 @@ class ArrayHelper
 
         foreach ($data as $item) {
             if (null !== $valueToPick && is_array($item)) {
-                $dataToSave = [];
-                foreach ($item as $key => $value) {
-                    if (is_array($valueToPick)) {
-                        if (array_key_exists($key, $valueToPick)) {
+                if (false === is_array($valueToPick) && isset($item[$valueToPick])) {
+                    $dataToSave = $item[$valueToPick];
+                } else {
+                    $dataToSave = [];
+                    foreach ($item as $key => $value) {
+                        if (isset($valueToPick[$key])) {
                             $dataToSave[$key] = $value;
                         }
-                    } else {
-                        $dataToSave = $value;
                     }
                 }
             } else {
@@ -199,8 +199,15 @@ class ArrayHelper
     {
         $result = [];
         foreach ($array as $key => $item) {
-            if (is_object($item) && property_exists($item, $column)) {
-                $value = $item->$column;
+            if (is_object($item)) {
+                $getter = 'get' . $column;
+                if (method_exists($item, $getter)) {
+                    $value = $item->$getter();
+                } elseif (isset($item->$column) || property_exists($item, $column)) { // Checking magic and regular properties both
+                    $value = $item->$column;
+                } else {
+                    continue;
+                }
             } elseif (isset($item[$column])) {
                 $value = $item[$column];
             } else {

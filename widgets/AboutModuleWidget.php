@@ -346,6 +346,12 @@ class AboutModuleWidget
      */
     private function translate($sentence)
     {
-        return TranslateHelper::translate($sentence, static::class, null, __DIR__ . '/../translations');
+        return TranslateHelper::translate(
+            $sentence,
+            static::class,
+            null,
+            __DIR__ . '/../translations',
+            true
+        );
     }
 }

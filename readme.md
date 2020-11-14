@@ -144,25 +144,25 @@ Add the dependency directly to your `composer.json` file:
 "repositories": [
   {
     "type": "vcs",
-    "url": "https://github.com/zapalm/prestashopHelpers"
+    "url": "https://github.com/zapalm/prestashop-helpers"
   }
 ],
 "require": {
   "php": ">=5.5",
-  "zapalm/prestashopHelpers": "dev-master"
+  "zapalm/prestashop-helpers": "dev-master"
 },
 ```
 
 ## How to help the project grow and get updates
 * **Become the [patron][2]** or support me by **[Flattr][6]** to help me work more for supporting and improving this project.
 * Report an issue.
-* Give me feedback.
+* Give me feedback or [contact with me][3].
 * Give the star to the project.
 * Contribute to the code.
 
 ## Contributing to the code
 
-### Requirements for code contributors 
+### Requirements for code contributors
 
 Contributors **must** follow the following rules:
 
@@ -188,6 +188,7 @@ Contributors wishing to edit the project's files should follow the following pro
 
 [1]: https://www.php-fig.org/psr/
 [2]: https://www.patreon.com/zapalm
+[3]: https://zapalm.ru
 [4]: https://help.github.com/articles/about-pull-requests/
 [5]: https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html
 [6]: https://flattr.com/@zapalm

@@ -11,6 +11,8 @@
 
 namespace zapalm\prestashopHelpers\components\cache;
 
+use Tools;
+
 /**
  * File cache system.
  *
@@ -162,7 +164,11 @@ class FileCache extends BaseCache
      */
     public function flush()
     {
-        \Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
+        Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
+
+        // Renew the storage to improve performance
+        $this->keys = [];
+        $this->_writeKeys();
 
         return true;
     }

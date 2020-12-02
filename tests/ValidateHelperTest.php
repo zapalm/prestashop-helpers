@@ -15,6 +15,8 @@ use zapalm\prestashopHelpers\helpers\ValidateHelper;
 $configPaths = [
     __DIR__ . '/../../../../../../config/config.inc.php', // From a module's directory
     __DIR__ . '/../../../../config/config.inc.php',       // From PrestaShop directory
+    __DIR__ . '/../../p1612-1c/config/config.inc.php',    // From a local PrestaShop directory
+    __DIR__ . '/../../p1768/config/config.inc.php',       // From another local PrestaShop directory
 ];
 
 foreach ($configPaths as $path) {
@@ -35,7 +37,15 @@ if (false === defined('_PS_CONFIG_DIR_')) {
  * TLD: top-level domain.
  * IDN: internationalized domain name.
  *
- * The example, how to run the test case: phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
+ * The example, how to run the test case when the tests directory in a module:
+ * ```
+ * phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
+ * ```
+ *
+ * The example, how to run the test case from this library directory:
+ * ```
+ * phpunit --bootstrap vendor\autoload.php tests\ValidateHelperTest
+ * ```
  *
  * @version 0.7.0
  *
@@ -253,7 +263,7 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
     {
         $incorrectIds = [
             ($resource = fopen('php://stderr', 'r')),
-            (new \StdClass()),
+            (new StdClass()),
             [10],
             'text',
             '',

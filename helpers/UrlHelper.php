@@ -11,6 +11,11 @@
 
 namespace zapalm\prestashopHelpers\helpers;
 
+use Configuration;
+use Context;
+use LogicException;
+use Tools;
+
 /**
  * URL helper.
  *
@@ -85,7 +90,7 @@ class UrlHelper
     {
         $params = static::getUtmLabels('', '');
         foreach ($params as $key => $value) {
-            $params[$key] = \Tools::getValue($key);
+            $params[$key] = Tools::getValue($key);
         }
 
         return array_filter($params);
@@ -98,17 +103,17 @@ class UrlHelper
      *
      * @return string The URL with trailing slash.
      *
-     * @throws \LogicException If called not in the back-office context.
+     * @throws LogicException If called not in the back-office context.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getAdminUrl()
     {
         if (false === defined('_PS_ADMIN_DIR_')) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
-        return \Context::getContext()->shop->getBaseURL(true) . basename(_PS_ADMIN_DIR_) . '/';
+        return Context::getContext()->shop->getBaseURL(true) . basename(_PS_ADMIN_DIR_) . '/';
     }
 
     /**
@@ -120,7 +125,7 @@ class UrlHelper
      */
     public static function getUploadUrl()
     {
-        return \Context::getContext()->shop->getBaseURL(true) . 'upload/';
+        return Context::getContext()->shop->getBaseURL(true) . 'upload/';
     }
 
     /**
@@ -132,7 +137,7 @@ class UrlHelper
      */
     public static function getDownloadUrl()
     {
-        return \Context::getContext()->shop->getBaseURL(true) . 'download/';
+        return Context::getContext()->shop->getBaseURL(true) . 'download/';
     }
 
     /**
@@ -142,17 +147,17 @@ class UrlHelper
      *
      * @return string The URL.
      *
-     * @throws \LogicException If a module name is invalid.
+     * @throws LogicException If a module name is invalid.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public function getModuleConfigureUrl($moduleName)
+    public static function getModuleConfigureUrl($moduleName)
     {
         if (false === ValidateHelper::isModuleName($moduleName)) {
-            throw new \LogicException();
+            throw new LogicException();
         }
 
-        return \Context::getContext()->link->getAdminLink('AdminModules') . '&configure=' . $moduleName;
+        return Context::getContext()->link->getAdminLink('AdminModules') . '&configure=' . $moduleName;
     }
 
     /**
@@ -169,7 +174,7 @@ class UrlHelper
      */
     public static function getShopDomain($appendHttpProtocol = false, $convertSpecialCharacters = false)
     {
-        $domain = \Configuration::get('PS_SHOP_DOMAIN');
+        $domain = Configuration::get('PS_SHOP_DOMAIN');
         if (false === $domain) {
             $domain = static::getHost();
         }
@@ -230,6 +235,6 @@ class UrlHelper
      */
     public static function isOriginHost($host)
     {
-        return (preg_replace('/^www./', '', $host) === preg_replace('/^www./', '', \Tools::getHttpHost(false, false, true)));
+        return (preg_replace('/^www./', '', $host) === preg_replace('/^www./', '', Tools::getHttpHost(false, false, true)));
     }
 }

@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * URL helper.
  *
- * @version 0.9.0
+ * @version 0.10.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -133,6 +133,26 @@ class UrlHelper
     public static function getDownloadUrl()
     {
         return \Context::getContext()->shop->getBaseURL(true) . 'download/';
+    }
+
+    /**
+     * Returns an URL to a module configuration page.
+     *
+     * @param string $moduleName The module name (for example: `gsitemap`).
+     *
+     * @return string The URL.
+     *
+     * @throws \LogicException If a module name is invalid.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function getModuleConfigureUrl($moduleName)
+    {
+        if (false === ValidateHelper::isModuleName($moduleName)) {
+            throw new \LogicException();
+        }
+
+        return \Context::getContext()->link->getAdminLink('AdminModules') . '&configure=' . $moduleName;
     }
 
     /**

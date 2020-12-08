@@ -16,6 +16,7 @@ use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
 use Product;
 use stdClass;
 use StockAvailable;
+use Warehouse;
 
 /**
  * Product helper.
@@ -67,25 +68,26 @@ class ProductHelper
      *
      * The method is necessary because it is more clear to use then core methods.
      *
-     * @param int   $productId     The product ID.
-     * @param int   $combinationId The combination ID.
-     * @param int[] $warehousesIds Warehouses IDs for which you want to get stock remains or empty array to use all of available warehouses.
+     * @param int      $productId     The product ID.
+     * @param int|null $combinationId The combination ID.
+     * @param int[]    $warehousesIds Warehouses IDs for which you want to get stock remains or empty array to use all of available warehouses.
+     * @param int|null $shopId        The shop ID.
      *
      * @return int The sum of stock remains of the product.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getProductRemains($productId, $combinationId = 0, $warehousesIds = [])
+    public static function getProductRemains($productId, $combinationId = null, $warehousesIds = [], $shopId = null)
     {
         $productId     = (int)$productId;
         $combinationId = (int)$combinationId;
 
         if ([] === $warehousesIds) {
-            $warehousesList = \Warehouse::getProductWarehouseList($productId, $combinationId);
+            $warehousesList = Warehouse::getProductWarehouseList($productId, $combinationId, $shopId);
             $warehousesIds  = ArrayHelper::getColumn($warehousesList, 'id_warehouse');
             $warehousesIds  = array_map('intval', $warehousesIds);
         }
 
-        return \Product::getRealQuantity($productId, $combinationId, $warehousesIds);
+        return Product::getRealQuantity($productId, $combinationId, $warehousesIds, $shopId);
     }
 }

@@ -11,6 +11,12 @@
 
 namespace zapalm\prestashopHelpers\helpers;
 
+use Configuration;
+use PrestaShop\PrestaShop\Adapter\Presenter\Product\ProductLazyArray;
+use Product;
+use stdClass;
+use StockAvailable;
+
 /**
  * Product helper.
  *
@@ -25,7 +31,7 @@ class ProductHelper
      *
      * Stock remains of a product must be checked separately from this method.
      *
-     * @param \Product|\stdClass $product The product object to check.
+     * @param Product|ProductLazyArray|stdClass $product The product object to check.
      *
      * @return bool
      *
@@ -40,15 +46,15 @@ class ProductHelper
         if (null !== $product->out_of_stock) {
             $productOutOfStock = (int)$product->out_of_stock;
         } else {
-            $productOutOfStock = \StockAvailable::outOfStock($product->id);
+            $productOutOfStock = StockAvailable::outOfStock($product->id_product);
         }
 
         if (0 === $productOutOfStock) { // 0 - Deny orders, 1 - Allow orders, 2 - Use a global option
             return false;
         }
 
-        $stockManagement = (bool)\Configuration::get('PS_STOCK_MANAGEMENT');
-        $orderOutOfStock = (bool)\Configuration::get('PS_ORDER_OUT_OF_STOCK');
+        $stockManagement = (bool)Configuration::get('PS_STOCK_MANAGEMENT');
+        $orderOutOfStock = (bool)Configuration::get('PS_ORDER_OUT_OF_STOCK');
         if (false === $stockManagement || 1 === $productOutOfStock || (2 === $productOutOfStock && $orderOutOfStock)) {
             return true;
         }

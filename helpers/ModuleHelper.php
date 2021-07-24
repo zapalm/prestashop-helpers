@@ -54,7 +54,7 @@ class ModuleHelper
      */
     public static function getInstanceByPath($directoryPath)
     {
-        $modulePath = str_replace(realpath(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR, '', $directoryPath);
+        $modulePath = str_replace(realpath(_PS_MODULE_DIR_) . DIRECTORY_SEPARATOR, '', realpath($directoryPath));
 
         if (false === strpos($modulePath, DIRECTORY_SEPARATOR)) {
             $moduleName = $modulePath;

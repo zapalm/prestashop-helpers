@@ -19,7 +19,7 @@ use Tools;
 /**
  * URL helper.
  *
- * @version 0.10.0
+ * @version 0.11.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */

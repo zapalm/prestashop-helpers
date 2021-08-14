@@ -221,7 +221,7 @@ class UrlHelper
         // Removing a port
         $domain = preg_replace('/:\d+$/', '', $domain);
 
-        return trim($domain);
+        return strtolower(trim($domain));
     }
 
     /**

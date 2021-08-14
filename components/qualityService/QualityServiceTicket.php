@@ -11,17 +11,23 @@
 
 namespace zapalm\prestashopHelpers\components\qualityService;
 
+use Configuration;
+use Context;
+use zapalm\prestashopHelpers\helpers\UrlHelper;
+
 /**
- * Quality service request data.
+ * Quality service ticket.
  *
  * @version 0.1.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
-class QualityServiceRequestData
+class QualityServiceTicket
 {
     /** The operation: installation */
     const OPERATION_INSTALLATION = 'installation';
+    /** The operation: uninstallation */
+    const OPERATION_UNINSTALLATION = 'uninstallation';
 
     /** The status of an operation: success. */
     const STATUS_SUCCESS = 'success';
@@ -38,6 +44,15 @@ class QualityServiceRequestData
 
     /** @var string The message (about an error or an informational message). */
     public $message;
+
+    /** @var int The internal product ID in the quality service. */
+    public $productId;
+
+    /** @var string The symbolic name of a product. */
+    public $productSymbolicName;
+
+    /** @var string The version of a product. */
+    public $productVersion;
 
     /** @var string The site domain. */
     public $shopDomain;
@@ -58,5 +73,27 @@ class QualityServiceRequestData
     public $phpVersion;
 
     /** @var string The version of IonCube. */
-    public $ionCubeVersion;
+    public $ioncubeVersion;
+
+    /**
+     * Constructor.
+     *
+     * @param int $productId The internal product ID in the quality service.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function __construct($productId)
+    {
+        $this->productId         = (int)$productId;
+        $this->prestashopVersion = _PS_VERSION_;
+        $this->thirtybeesVersion = (defined('_TB_VERSION_') ? _TB_VERSION_ : '');
+        $this->shopDomain        = UrlHelper::getShopDomain();
+        $this->phpVersion        = PHP_VERSION;
+        $this->languageIsoCode   = Context::getContext()->language->iso_code;
+        $this->ioncubeVersion    = (function_exists('ioncube_loader_iversion') ? ioncube_loader_iversion() : '');
+
+        // This public e-mail from a shop's contacts can be used by a developer to send only an urgent information about
+        // security issue of a module!
+        $this->shopEmail = Configuration::get('PS_SHOP_EMAIL');
+    }
 }

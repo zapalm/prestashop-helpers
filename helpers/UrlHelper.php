@@ -237,4 +237,24 @@ class UrlHelper
     {
         return (preg_replace('/^www./', '', $host) === preg_replace('/^www./', '', Tools::getHttpHost(false, false, true)));
     }
+
+    /**
+     * Returns a client IP.
+     *
+     * @return string
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function getClientIp()
+    {
+        if (false === empty($_SERVER['HTTP_CLIENT_IP'])) {
+            return $_SERVER['HTTP_CLIENT_IP'];
+        }
+
+        if (false === empty($_SERVER['HTTP_X_FORWARDED_FOR'])) {
+            return $_SERVER['HTTP_X_FORWARDED_FOR'];
+        }
+
+        return $_SERVER['REMOTE_ADDR'];
+    }
 }

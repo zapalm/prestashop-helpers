@@ -22,7 +22,7 @@ use zapalm\prestashopHelpers\helpers\TranslateHelper;
 /**
  * About module widget.
  *
- * @version 0.12.0
+ * @version 0.13.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -72,9 +72,6 @@ class AboutModuleWidget
 
     /** @var string Author title */
     protected $authorTitle;
-
-    /** @var string Author icon URI */
-    protected $authorIconUri = 'img/zapalm24x24.jpg';
 
     /** @var Module Module */
     protected $module;
@@ -160,14 +157,6 @@ class AboutModuleWidget
         }
 
         $authorHtml = FormHelper::encode(null !== $this->authorTitle ? $this->authorTitle : $this->module->author);
-        if (null !== $this->authorIconUri) {
-            $authorIconUrl = $this->siteUrl . '/' . $this->authorIconUri;
-            if (false === filter_var($authorIconUrl, FILTER_VALIDATE_URL)) {
-                throw new LogicException('Invalid configuration: author icon URI.');
-            }
-
-            $authorHtml .= ' <img src="' . FormHelper::encode($authorIconUrl) . '" alt="' . $this->translate('Author') . '" width="24" height="24">';
-        }
 
         $siteLogoUrl = $this->siteUrl . '/' . $this->siteLogoUri;
         if (false === filter_var($siteLogoUrl, FILTER_VALIDATE_URL)) {
@@ -315,22 +304,6 @@ class AboutModuleWidget
     public function setAuthorTitle($authorTitle)
     {
         $this->authorTitle = $authorTitle;
-
-        return $this;
-    }
-
-    /**
-     * Sets a author icon URI.
-     *
-     * @param string $authorIconUri The author icon URI.
-     *
-     * @return static
-     *
-     * @author Maksim T. <zapalm@yandex.com>
-     */
-    public function setAuthorIconUri($authorIconUri)
-    {
-        $this->authorIconUri = $authorIconUri;
 
         return $this;
     }

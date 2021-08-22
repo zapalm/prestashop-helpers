@@ -9,39 +9,12 @@
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
-// Try to find PrestaShop configuration file
-$configPaths = [
-    __DIR__ . '/../../../../../../config/config.inc.php', // From a module's directory
-    __DIR__ . '/../../../../config/config.inc.php',       // From PrestaShop directory
-    __DIR__ . '/../../p1612-1c/config/config.inc.php',    // From a local PrestaShop directory
-    __DIR__ . '/../../p1768/config/config.inc.php',       // From another local PrestaShop directory
-];
-
-foreach ($configPaths as $path) {
-    if (file_exists($path)) {
-        require_once $path;
-        break;
-    }
-}
-
-if (false === defined('_PS_CONFIG_DIR_')) {
-    throw new LogicException('Can not found PrestaShop configuration file: config.inc.php');
-}
+require __DIR__ . '/autoload.inc.php';
 
 use zapalm\prestashopHelpers\components\cache\CacheProvider;
 
 /**
  * Test case for the cache component.
- *
- * The example, how to run the test case when the tests directory in a module:
- * ```
- * phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
- * ```
- *
- * The example, how to run the test case from this library directory:
- * ```
- * phpunit --bootstrap vendor\autoload.php tests\CacheComponentTest
- * ```
  *
  * @version 0.3.0
  *

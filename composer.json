@@ -25,5 +25,10 @@
     "psr-4": {
       "zapalm\\prestashopHelpers\\": ""
     }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "zapalm\\prestashopHelpers\\tests\\fixtures\\": "tests/fixtures"
+    }
   }
 }

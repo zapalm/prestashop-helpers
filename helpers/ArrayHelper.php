@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\helpers;
 /**
  * Array helper.
  *
- * @version 0.3.0
+ * @version 0.4.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -23,7 +23,10 @@ class ArrayHelper
     /**
      * Groups an array according to a specified column.
      *
-     * The input array should be multidimensional or an array of objects.
+     * An input array my be a multidimensional or an array of objects.
+     *
+     * Note: a structure of child elements in an array must be the same and attributes for grouping and
+     * indexing must be accessible for reading (be public or has getters).
      *
      * For example,
      *
@@ -50,10 +53,10 @@ class ArrayHelper
      * // ]
      * ~~~
      *
-     * @param array|\Traversable $data          The source array.
-     * @param string             $groupByColumn The column name to group the source array.
-     * @param string|null        $indexByColumn The column name to index the returned array. If null, the resulting array will not be indexed.
-     * @param string|array|null  $valueToPick   The column or columns from the returned array to maintain. If null, all values will be returned.
+     * @param array|\Traversable   $data          The source array.
+     * @param string               $groupByColumn The column name to group the source array.
+     * @param string|null          $indexByColumn The column name to index the returned array. If null, the resulting array will not be indexed.
+     * @param string|string[]|null $valueToPick   The column or columns from the returned array to maintain. If null, all values will be returned.
      *
      * @return array
      *
@@ -65,21 +68,42 @@ class ArrayHelper
             return [];
         }
 
-        if (is_array($valueToPick)) {
-            $valueToPick = array_combine($valueToPick, $valueToPick);
+        if (is_string($valueToPick)) {
+            $valueToPick = [$valueToPick];
         }
 
         $result = [];
 
+        $item = reset($data);
+        if (is_object($item)) {
+            $groupByColumnGetter         = 'get' . $groupByColumn;
+            $isGroupByColumnGetterExists = method_exists($item, $groupByColumnGetter);
+
+            $indexByColumnGetter         = 'get' . $indexByColumn;
+            $isIndexByColumnGetterExists = method_exists($item, $indexByColumnGetter);
+
+        } else {
+            $isGroupByColumnGetterExists = false;
+            $isIndexByColumnGetterExists = false;
+        }
+
         foreach ($data as $item) {
-            if (null !== $valueToPick && is_array($item)) {
-                if (false === is_array($valueToPick) && isset($item[$valueToPick])) {
-                    $dataToSave = $item[$valueToPick];
+            if (null !== $valueToPick) {
+                if (is_array($item)) {
+                    $dataToSave = [];
+                    foreach ($valueToPick as $attribute) {
+                        if (array_key_exists($attribute, $item)) {
+                            $dataToSave[$attribute] = $item[$attribute];
+                        }
+                    }
                 } else {
                     $dataToSave = [];
-                    foreach ($item as $key => $value) {
-                        if (isset($valueToPick[$key])) {
-                            $dataToSave[$key] = $value;
+                    foreach ($valueToPick as $attribute) {
+                        $getter = "get{$attribute}";
+                        if (method_exists($item, $getter)) {
+                            $dataToSave[$attribute] = $item->$getter();
+                        } else {
+                            $dataToSave[$attribute] = $item->$attribute;
                         }
                     }
                 }
@@ -90,15 +114,14 @@ class ArrayHelper
             if (is_array($item)) {
                 $groupKey = $item[$groupByColumn];
             } else {
-                $getter = 'get' . $groupByColumn;
-                if (method_exists($item, $getter)) {
-                    $groupKey = $item->$getter();
+                if ($isGroupByColumnGetterExists) {
+                    $groupKey = $item->$groupByColumnGetter();
                 } else {
                     $groupKey = $item->$groupByColumn;
                 }
             }
 
-            if (false === isset($result[$groupKey])) {
+            if (false === array_key_exists($groupKey, $result)) {
                 $result[$groupKey] = [];
             }
 
@@ -108,9 +131,8 @@ class ArrayHelper
                 if (is_array($item)) {
                     $indexKey = $item[$indexByColumn];
                 } else {
-                    $getter = 'get' . $indexByColumn;
-                    if (method_exists($item, $getter)) {
-                        $indexKey = $item->$getter();
+                    if ($isIndexByColumnGetterExists) {
+                        $indexKey = $item->$indexByColumnGetter();
                     } else {
                         $indexKey = $item->$indexByColumn;
                     }

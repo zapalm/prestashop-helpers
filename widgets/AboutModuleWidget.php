@@ -22,7 +22,7 @@ use zapalm\prestashopHelpers\helpers\TranslateHelper;
 /**
  * About module widget.
  *
- * @version 0.13.0
+ * @version 0.14.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -76,6 +76,9 @@ class AboutModuleWidget
     /** @var Module Module */
     protected $module;
 
+    /** @var int Product ID of a module on its homepage. */
+    protected $productId;
+
     /**
      * Constructor.
      *
@@ -127,6 +130,9 @@ class AboutModuleWidget
             throw new LogicException('Invalid configuration: site URL.');
         }
 
+        if (null === $this->moduleUri && null !== $this->productId) {
+            $this->moduleUri = $this->productId . '-' . $this->module->name . '.html';
+        }
         $moduleUrl = $siteUrlByLanguage . $this->moduleUri;
         if (false === filter_var($moduleUrl, FILTER_VALIDATE_URL)) {
             throw new LogicException('Invalid configuration: module URI.');
@@ -197,11 +203,31 @@ class AboutModuleWidget
      *
      * @return static
      *
+     * @see setProductId() An alternative method.
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function setModuleUri($moduleUri)
     {
         $this->moduleUri = $moduleUri;
+
+        return $this;
+    }
+
+    /**
+     * Sets a product ID of a module on its homepage.
+     *
+     * @param int $productId The product ID.
+     *
+     * @return static
+     *
+     * @see setModuleUri() An alternative method.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setProductId($productId)
+    {
+        $this->productId = (int)$productId;
 
         return $this;
     }

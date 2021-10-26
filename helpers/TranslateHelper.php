@@ -5,7 +5,7 @@
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
- * @link      https://github.com/zapalm/prestashopHelpers GitHub
+ * @link      https://github.com/zapalm/prestashop-helpers GitHub
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
@@ -35,6 +35,7 @@ class TranslateHelper
      * @param string|null $languageIsoCode       The language ISO code to translate into or null to get it automatically from the context.
      * @param string      $translationsDirectory The directory for translation files. Defaults: `/translations`.
      * @param bool        $combineTranslations   Whether to combine all translations into one file.
+     * @param bool        $modifyStorage         Whether to modify the storage file with translations.
      *
      * @return string The translated sentence or the same sentence if it was not translated before.
      *
@@ -44,7 +45,7 @@ class TranslateHelper
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function translate($sentence, $sourcePath, $languageIsoCode = null, $translationsDirectory = _PS_TRANSLATIONS_DIR_, $combineTranslations = false)
+    public static function translate($sentence, $sourcePath, $languageIsoCode = null, $translationsDirectory = _PS_TRANSLATIONS_DIR_, $combineTranslations = false, $modifyStorage = true)
     {
         if (file_exists($sourcePath)) {
             $index = str_replace(realpath(_PS_ROOT_DIR_) . DIRECTORY_SEPARATOR, '', realpath($sourcePath)); // Getting a relative path from a site root
@@ -95,7 +96,7 @@ class TranslateHelper
             $vocabulary[$index][$sentence] = '';
         }
 
-        if ($vocabulary !== $vocabularyOld) {
+        if ($modifyStorage && $vocabulary !== $vocabularyOld) {
             file_put_contents($vocabularyFilePath, '<?php return ' . var_export($vocabulary, true) . ';');
         }
 

@@ -5,7 +5,7 @@
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
- * @link      https://github.com/zapalm/prestashopHelpers GitHub
+ * @link      https://github.com/zapalm/prestashop-helpers GitHub
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 

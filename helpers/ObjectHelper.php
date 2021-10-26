@@ -5,37 +5,41 @@
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
- * @link      https://github.com/zapalm/prestashopHelpers GitHub
+ * @link      https://github.com/zapalm/prestashop-helpers GitHub
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
 namespace zapalm\prestashopHelpers\helpers;
 
+use ReflectionClass;
+use ReflectionException;
+use ReflectionProperty;
+
 /**
  * Object helper.
  *
- * @version 0.2.0
+ * @version 0.3.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
 class ObjectHelper
 {
     /**
-     * Returns an object attributes.
+     * Returns attributes of PrestaShop object model.
      *
      * @param object $object The object.
      *
      * @return string[]
      *
-     * @throws \ReflectionException If the class does not exist.
+     * @throws ReflectionException If the class does not exist.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public static function getAttributes($object) {
         $attributes = array();
 
-        $class = new \ReflectionClass($object);
-        foreach ($class->getProperties(\ReflectionProperty::IS_PUBLIC) as $property) {
+        $class = new ReflectionClass($object);
+        foreach ($class->getProperties(ReflectionProperty::IS_PUBLIC) as $property) {
             if (false === $property->isStatic()) {
                 $attributeName = $property->getName();
                 $attributes[$attributeName] = $object->$attributeName;
@@ -59,5 +63,30 @@ class ObjectHelper
                 $object->$propertyName = $propertyValue;
             }
         }
+    }
+
+    /**
+     * Convert an object to an array.
+     *
+     * The method is needed when a namespace for a class and a scope for properties are used.
+     *
+     * @param object $object The object to convert.
+     *
+     * @return array
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public static function convertToArray($object)
+    {
+        $array      = (array)$object;
+        $attributes = [];
+
+        foreach ($array as $key => $value) {
+            $attributeDefinitionParts   = explode("\0", $key);
+            $attributeName              = $attributeDefinitionParts[count($attributeDefinitionParts) - 1];
+            $attributes[$attributeName] = $array[$key];
+        }
+
+        return $attributes;
     }
 }

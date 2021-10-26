@@ -5,7 +5,7 @@
  * @author    Maksim T. <zapalm@yandex.com>
  * @copyright 2018 Maksim T.
  * @license   https://opensource.org/licenses/MIT MIT
- * @link      https://github.com/zapalm/prestashopHelpers GitHub
+ * @link      https://github.com/zapalm/prestashop-helpers GitHub
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
@@ -22,7 +22,7 @@ use zapalm\prestashopHelpers\helpers\TranslateHelper;
 /**
  * About module widget.
  *
- * @version 0.12.0
+ * @version 0.14.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -73,11 +73,11 @@ class AboutModuleWidget
     /** @var string Author title */
     protected $authorTitle;
 
-    /** @var string Author icon URI */
-    protected $authorIconUri = 'img/zapalm24x24.jpg';
-
     /** @var Module Module */
     protected $module;
+
+    /** @var int Product ID of a module on its homepage. */
+    protected $productId;
 
     /**
      * Constructor.
@@ -130,6 +130,9 @@ class AboutModuleWidget
             throw new LogicException('Invalid configuration: site URL.');
         }
 
+        if (null === $this->moduleUri && null !== $this->productId) {
+            $this->moduleUri = $this->productId . '-' . $this->module->name . '.html';
+        }
         $moduleUrl = $siteUrlByLanguage . $this->moduleUri;
         if (false === filter_var($moduleUrl, FILTER_VALIDATE_URL)) {
             throw new LogicException('Invalid configuration: module URI.');
@@ -160,14 +163,6 @@ class AboutModuleWidget
         }
 
         $authorHtml = FormHelper::encode(null !== $this->authorTitle ? $this->authorTitle : $this->module->author);
-        if (null !== $this->authorIconUri) {
-            $authorIconUrl = $this->siteUrl . '/' . $this->authorIconUri;
-            if (false === filter_var($authorIconUrl, FILTER_VALIDATE_URL)) {
-                throw new LogicException('Invalid configuration: author icon URI.');
-            }
-
-            $authorHtml .= ' <img src="' . FormHelper::encode($authorIconUrl) . '" alt="' . $this->translate('Author') . '" width="24" height="24">';
-        }
 
         $siteLogoUrl = $this->siteUrl . '/' . $this->siteLogoUri;
         if (false === filter_var($siteLogoUrl, FILTER_VALIDATE_URL)) {
@@ -208,11 +203,31 @@ class AboutModuleWidget
      *
      * @return static
      *
+     * @see setProductId() An alternative method.
+     *
      * @author Maksim T. <zapalm@yandex.com>
      */
     public function setModuleUri($moduleUri)
     {
         $this->moduleUri = $moduleUri;
+
+        return $this;
+    }
+
+    /**
+     * Sets a product ID of a module on its homepage.
+     *
+     * @param int $productId The product ID.
+     *
+     * @return static
+     *
+     * @see setModuleUri() An alternative method.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function setProductId($productId)
+    {
+        $this->productId = (int)$productId;
 
         return $this;
     }
@@ -315,22 +330,6 @@ class AboutModuleWidget
     public function setAuthorTitle($authorTitle)
     {
         $this->authorTitle = $authorTitle;
-
-        return $this;
-    }
-
-    /**
-     * Sets a author icon URI.
-     *
-     * @param string $authorIconUri The author icon URI.
-     *
-     * @return static
-     *
-     * @author Maksim T. <zapalm@yandex.com>
-     */
-    public function setAuthorIconUri($authorIconUri)
-    {
-        $this->authorIconUri = $authorIconUri;
 
         return $this;
     }

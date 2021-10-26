@@ -1,5 +1,5 @@
 {
-  "name": "zapalm/prestashopHelpers",
+  "name": "zapalm/prestashop-helpers",
   "type": "library",
   "description": "Helper classes for Prestashop CMS.",
   "keywords": [
@@ -17,18 +17,18 @@
   ],
   "minimum-stability": "dev",
   "require": {
-    "ext-json": "*",
-    "php": ">=5.5"
+    "php": ">=5.5",
+    "ext-zip": "*",
+    "ext-json": "*"
   },
   "autoload": {
     "psr-4": {
       "zapalm\\prestashopHelpers\\": ""
     }
   },
-  "config": {
-    "platform": {
-      "php": "5.5"
-    },
-    "preferred-install": "dist"
+  "autoload-dev": {
+    "psr-4": {
+      "zapalm\\prestashopHelpers\\tests\\fixtures\\": "tests/fixtures"
+    }
   }
 }

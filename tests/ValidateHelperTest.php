@@ -9,26 +9,9 @@
  * @link      https://prestashop.modulez.ru/en/tools-scripts/53-helper-classes-for-prestashop.html Homepage
  */
 
+require __DIR__ . '/autoload.inc.php';
+
 use zapalm\prestashopHelpers\helpers\ValidateHelper;
-
-// Try to find PrestaShop configuration file
-$configPaths = [
-    __DIR__ . '/../../../../../../config/config.inc.php', // From a module's directory
-    __DIR__ . '/../../../../config/config.inc.php',       // From PrestaShop directory
-    __DIR__ . '/../../p1612-1c/config/config.inc.php',    // From a local PrestaShop directory
-    __DIR__ . '/../../p1768/config/config.inc.php',       // From another local PrestaShop directory
-];
-
-foreach ($configPaths as $path) {
-    if (file_exists($path)) {
-        require_once $path;
-        break;
-    }
-}
-
-if (false === defined('_PS_CONFIG_DIR_')) {
-    throw new LogicException('Can not found PrestaShop configuration file: config.inc.php');
-}
 
 /**
  * Test case for ValidateHelper.
@@ -36,16 +19,6 @@ if (false === defined('_PS_CONFIG_DIR_')) {
  * Terminology.
  * TLD: top-level domain.
  * IDN: internationalized domain name.
- *
- * The example, how to run the test case when the tests directory in a module:
- * ```
- * phpunit --bootstrap vendor\autoload.php vendor\zapalm\prestashopHelpers\tests
- * ```
- *
- * The example, how to run the test case from this library directory:
- * ```
- * phpunit --bootstrap vendor\autoload.php tests\ValidateHelperTest
- * ```
  *
  * @version 0.7.0
  *
@@ -73,19 +46,46 @@ class ValidateHelperTest extends PHPUnit_Framework_TestCase
             'modulez.com.au'              => true,
             'modulez.t.t.co'              => true,
 
+            '123abc.com'                  => true, // A domain allowed to begin with a digit (RFC 1123)
+            '123.com'                     => true, // A domain (but not a TLD) allows a set of only digits (RFC 1123)
+            '111.222.333.com'             => true, // A domain and subdomains (but not a TLD) could legally be entirely numeric (RFC 1123)
+
+            // Labels must be 63 characters or less (RFC 1034)
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com' => true,
+
+            // The maximum length of a full domain name with dots is 253 characters, but not 255:
+            // https://devblogs.microsoft.com/oldnewthing/?p=7873
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com' => true,
+
+            // A full domain can contain many sub-domains and this is correct.
+            // The maximum number of labels at the moment can be 127 in a theory, as written in Wikipedia (but less in a practice):
+            // https://en.wikipedia.org/wiki/Domain_name
+            'a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a.a' => true,
+
+            // The restriction on the first character is relaxed to allow either a letter or a digit (RFC 1123)
+            'google.123abc'               => true,
+
+            // TLD may to consist of a single character, however, there are currently no single character TLDs in the root registry:
+            // https://stackoverflow.com/a/21872376/1856214
+            'modulez.t.t.c'               => true,
+
             // Black List
             'localhost'                   => false, // Unqualified sub-domain
-            'modulez.t.t.c'               => false, // TLD must contain minimum 2 symbols
             'modulez,com'                 => false, // Comma is not allowed
-            'modulez.123'                 => false, // TLD is not allows digits
+            'modulez.123'                 => false, // For now TLD can not consist of only digits
             '.com'                        => false, // Must start with [A-Za-z0-9]
             '.'                           => false, // Just the dot
             'ru.'                         => false, // Without TLD
             'modulez.com/users'           => false, // Not the TLD, but the URL
             '-modulez.com'                => false, // Cannot begin with the hyphen
             'sub.-modulez.com'            => false, // ...
+            'sub.modulez.-com'            => false, // ...
             'modulez-.com'                => false, // Cannot end with the hyphen
             'sub.modulez-.com'            => false, // ...
+            'modulez.com-'                => false, // ...
+
+            // The maximum length of a full domain name with dots must not more then 253
+            'aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa.com' => false,
 
             // Black List (invalid, because these are IDN domains)
             'престашоп.рф'                => false, // Russian, Unicode

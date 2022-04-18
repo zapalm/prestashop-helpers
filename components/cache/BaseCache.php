@@ -14,7 +14,7 @@ namespace zapalm\prestashopHelpers\components\cache;
 /**
  * Base class of a cache system.
  *
- * @version 0.5.0
+ * @version 0.6.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -88,5 +88,38 @@ abstract class BaseCache extends \Cache
     public static function getCachingSystemClassName()
     {
         return self::$cachingSystemClassName;
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    public function delete($key)
+    {
+        $keysToDelete = [];
+
+        if ('*' === $key) {
+            $keysToDelete = array_keys($this->keys);
+        } elseif (false === mb_strpos($key, '*')) {
+            $keysToDelete = [$key];
+        } else {
+            $pattern = str_replace('\\*', '.*', preg_quote($key));
+            foreach (array_keys($this->keys) as $keyToDelete) {
+                if (1 === preg_match('#^' . $pattern . '$#', $keyToDelete)) {
+                    $keysToDelete[] = $keyToDelete;
+                }
+            }
+        }
+
+        foreach ($keysToDelete as $key) {
+            if (array_key_exists($key, $this->keys) && $this->_delete($key)) {
+                unset($this->keys[$key]);
+            }
+        }
+
+        $this->_writeKeys();
+
+        return $keysToDelete;
     }
 }

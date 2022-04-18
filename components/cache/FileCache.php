@@ -166,7 +166,6 @@ class FileCache extends BaseCache
     {
         Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
 
-        // Renew the storage to improve performance
         $this->keys = [];
         $this->_writeKeys();
 

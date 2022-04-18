@@ -165,6 +165,7 @@ class FileCache extends BaseCache
     public function flush()
     {
         Tools::deleteDirectory(_PS_CACHEFS_DIRECTORY_, false);
+        file_put_contents(_PS_CACHEFS_DIRECTORY_ . 'index.php', Tools::getDefaultIndexContent());
 
         $this->keys = [];
         $this->_writeKeys();

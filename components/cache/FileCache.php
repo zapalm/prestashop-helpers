@@ -120,7 +120,7 @@ class FileCache extends BaseCache
      */
     protected function _exists($key)
     {
-        if (false === isset($this->keys[$key])) {
+        if (false === array_key_exists($key, $this->keys)) {
             return false;
         }
 

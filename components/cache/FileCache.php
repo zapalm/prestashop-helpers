@@ -71,7 +71,19 @@ class FileCache extends BaseCache
      */
     protected function getFilePath($key)
     {
-        return _PS_CACHEFS_DIRECTORY_ . md5($key) . '.ser';
+        $keyHash       = md5($key);
+        $directoryPath = _PS_CACHEFS_DIRECTORY_;
+
+        // Create nested directories in a path to a cache file
+        for ($i = 0; $i < 3; $i++) {
+            $directoryPath .= $keyHash[$i] . '/';
+        }
+
+        if (false === file_exists($directoryPath)) {
+            @mkdir($directoryPath, 0777, true);
+        }
+
+        return $directoryPath . $keyHash . '.ser';
     }
 
     /**

@@ -11,10 +11,12 @@
 
 namespace zapalm\prestashopHelpers\helpers;
 
+use ZipArchive;
+
 /**
  * File helper.
  *
- * @version 0.7.0
+ * @version 0.8.0
  *
  * @author Maksim T. <zapalm@yandex.com>
  */
@@ -171,14 +173,70 @@ class FileHelper
     /**
      * Extract a Zip archive.
      *
-     * @param string $zipFile     The archive to be extracted.
-     * @param string $destination The directory where to extract the archive.
+     * @param string      $zipFile     The archive to be extracted.
+     * @param string      $destination The directory where to extract the archive.
+     * @param string|null $error       The reference to a variable to store an error message.
      *
      * @return bool
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function extractZip($zipFile, $destination) {
-        return \Tools::ZipExtract($zipFile, $destination);
+    public static function extractZip($zipFile, $destination, &$error = null)
+    {
+        if (false === file_exists($destination)) {
+            if (false === mkdir($destination)) {
+                $error = static::translate('It is not possible to create the directory for unpacking the archive.');
+
+                return false;
+            }
+        }
+
+        if (false === class_exists('ZipArchive', false)) {
+            $error = static::translate('ZipArchive class is missing (probably too old PHP version).');
+
+            return false;
+        }
+
+        $zip        = new ZipArchive();
+        $openResult = $zip->open($zipFile);
+        if (true !== $openResult) {
+            $error = static::translate('There was an error when opening a ZIP file, error code:') . ' ' . $openResult;
+
+            return false;
+        }
+
+        if (false === $zip->extractTo($destination)) {
+            $error = static::translate('It was not possible to unpack the ZIP archive.');
+
+            return false;
+        }
+
+        if (false === $zip->close()) {
+            $error = static::translate('Failed to close the ZIP file.');
+
+            return false;
+        }
+
+        return true;
+    }
+
+    /**
+     * Translates a sentence.
+     *
+     * @param string $sentence The sentence.
+     *
+     * @return string The translated sentence or the same sentence if it was not translated before.
+     *
+     * @author Maksim T. <zapalm@yandex.com>
+     */
+    private static function translate($sentence)
+    {
+        return TranslateHelper::translate(
+            $sentence,
+            static::class,
+            null,
+            __DIR__ . '/../translations',
+            true
+        );
     }
 }

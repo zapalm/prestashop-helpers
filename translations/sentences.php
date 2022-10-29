@@ -80,4 +80,27 @@
       'ru' => 'Проприетарная лицензия на ПО с доступным исходным кодом',
     ),
   ),
+  'zapalm\\prestashopHelpers\\helpers\\FileHelper' => 
+  array (
+    'It is not possible to create the directory for unpacking the archive.' => 
+    array (
+      'ru' => 'Невозможно создать директорию для распаковки архива.',
+    ),
+    'ZipArchive class is missing (probably too old PHP version).' => 
+    array (
+      'ru' => 'Отсутствует класс ZipArchive (возможно слишком старая версия PHP).',
+    ),
+    'There was an error when opening a ZIP file, error code:' => 
+    array (
+      'ru' => 'Произошла ошибка при открытии ZIP-файла, код ошибки:',
+    ),
+    'It was not possible to unpack the ZIP archive.' => 
+    array (
+      'ru' => 'Не удалось распаковать ZIP-архив.',
+    ),
+    'Failed to close the ZIP file.' => 
+    array (
+      'ru' => 'Не удалось закрыть ZIP-файл.',
+    ),
+  ),
 );

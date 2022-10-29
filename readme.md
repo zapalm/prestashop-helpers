@@ -1,5 +1,5 @@
 # Helper classes for PrestaShop CMS
-Full documented helper classes for PrestaShop CMS (1.7, 1.6, 1.5).
+Full documented helper classes for PrestaShop CMS (8, 1.7, 1.6, 1.5).
 With these helpers some programming tasks becomes more simple and done faster.
 [The library homepage][5].
 
@@ -177,7 +177,7 @@ Contributors wishing to edit the project's files should follow the following pro
 5. Change the files in your branch. Be sure to follow [the coding standards][1].
 6. Push your changed branch to your fork in your GitHub account.
 7. Create a pull request for your changes **on the *dev* branch** of the project.
-   If you need help to make a pull request, read the [Github help page about creating pull requests][4].
+   If you need help to make a pull request, read the [GitHub help page about creating pull requests][4].
 8. Wait for the maintainer to apply your changes.
 
 **Do not hesitate to create a pull request if even it's hard for you to apply the coding standards.**

@@ -89,15 +89,14 @@ class ArrayHelper
 
         foreach ($data as $item) {
             if (null !== $valueToPick) {
+                $dataToSave = [];
                 if (is_array($item)) {
-                    $dataToSave = [];
                     foreach ($valueToPick as $attribute) {
                         if (array_key_exists($attribute, $item)) {
                             $dataToSave[$attribute] = $item[$attribute];
                         }
                     }
                 } else {
-                    $dataToSave = [];
                     foreach ($valueToPick as $attribute) {
                         $getter = "get{$attribute}";
                         if (method_exists($item, $getter)) {

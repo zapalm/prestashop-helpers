@@ -84,7 +84,7 @@ class ObjectHelper
         foreach ($array as $key => $value) {
             $attributeDefinitionParts   = explode("\0", $key);
             $attributeName              = $attributeDefinitionParts[count($attributeDefinitionParts) - 1];
-            $attributes[$attributeName] = $array[$key];
+            $attributes[$attributeName] = $value;
         }
 
         return $attributes;

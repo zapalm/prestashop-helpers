@@ -64,7 +64,7 @@ class FileHelper
         $uploadMaxFileSize = (int)static::parseSize(ini_get('upload_max_filesize'));
 
         if ($uploadMaxFileSize > 0 && (0 === $maxSize || $maxSize > $uploadMaxFileSize)) {
-            $maxSize = (int)$uploadMaxFileSize;
+            $maxSize = $uploadMaxFileSize;
         }
 
         return (0 === $maxSize ? false : $maxSize);

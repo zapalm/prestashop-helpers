@@ -29,14 +29,14 @@ class LogHelper
      *     $this->log('An error occupied.');
      * }
      * public function log($messages, $level = AbstractLogger::WARNING) {
-     *     LogHelper::log($messages, $level, $this->l('A module category example'), $this->id);
+     *     LogHelper::log($messages, $level, $this->name, $this->id);
      * }
      * ~~~
      *
      * @param string|string[] $messages     The message or messages to be logged.
      * @param int             $level        The level of the message.
-     * @param string          $categoryName The category name. For example, the module title. Note the name will be validated by {@see Validate::isName()}, i.e. you can mostly use only letters (you can't use numbers and special symbols).
-     * @param int             $categoryId   The category ID. For example, the module ID.
+     * @param string          $categoryName The log category name. For example, a module technical name or some class name. In different PrestaShop versions a different validator is used (in PS 8 - isValidObjectClassName, in older versions - isName), i.e. you can mostly use only letters (you can't use numbers and special symbols).
+     * @param int             $categoryId   The log category ID. For example, a module ID or some object ID.
      *
      * @throws \UnexpectedValueException
      *
@@ -47,14 +47,14 @@ class LogHelper
             $loggerClass = \Logger::class;
         } else {
             $loggerClass = \PrestaShopLogger::class;
-        }
+        } /** @var string|\PrestaShopLogger|\Logger $loggerClass */
 
         if (false === in_array($level, array(
-                \AbstractLogger::DEBUG,
-                \AbstractLogger::INFO,
-                \AbstractLogger::WARNING,
-                \AbstractLogger::ERROR,
-            ))) {
+            \AbstractLogger::DEBUG,
+            \AbstractLogger::INFO,
+            \AbstractLogger::WARNING,
+            \AbstractLogger::ERROR,
+        ))) {
             throw new \UnexpectedValueException();
         }
 
@@ -66,7 +66,7 @@ class LogHelper
             $message = str_replace(array("\n", "\r"), ' ', $message);
             $message = strip_tags($message);
 
-            $loggerClass::addLog( /** @var \PrestaShopLogger|\Logger $loggerClass */
+            $loggerClass::addLog(
                 $message,
                 $level,
                 null,

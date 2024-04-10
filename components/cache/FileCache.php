@@ -47,13 +47,15 @@ class FileCache extends BaseCache
     /**
      * Returns an instance of FileCache system.
      *
+     * @param bool $force Force re-init the instance.
+     *
      * @return static The instance.
      *
      * @author Maksim T. <zapalm@yandex.com>
      */
-    public static function getInstance()
+    public static function getInstance($force = false)
     {
-        if (null === static::$instance) {
+        if (null === static::$instance || $force) {
             static::$instance = new static();
         }
 

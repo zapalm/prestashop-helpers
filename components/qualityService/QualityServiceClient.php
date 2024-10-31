@@ -12,6 +12,7 @@
 namespace zapalm\prestashopHelpers\components\qualityService;
 
 use Module;
+use Tools;
 use zapalm\prestashopHelpers\helpers\ObjectHelper;
 
 /**
@@ -62,9 +63,8 @@ class QualityServiceClient
         $ticket->message             = $message;
 
         $requestParams = ObjectHelper::convertToArray($this->ticket);
-        @file_get_contents($this->serviceUrl . '?' . http_build_query([
-            'data' => json_encode($requestParams, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-        ]));
+        $requestUrl    = $this->serviceUrl . '?' . http_build_query(['data' => json_encode($requestParams, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]);
+        Tools::file_get_contents($requestUrl, false, null, 5, true);
     }
 
     /**
@@ -87,9 +87,8 @@ class QualityServiceClient
         $ticket->message             = $message;
 
         $requestParams = ObjectHelper::convertToArray($this->ticket);
-        @file_get_contents($this->serviceUrl . '?' . http_build_query([
-            'data' => json_encode($requestParams, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE),
-        ]));
+        $requestUrl    = $this->serviceUrl . '?' . http_build_query(['data' => json_encode($requestParams, JSON_UNESCAPED_SLASHES | JSON_UNESCAPED_UNICODE)]);
+        Tools::file_get_contents($requestUrl, false, null, 5, true);
     }
 
     /**

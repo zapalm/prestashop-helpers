@@ -1,5 +1,5 @@
 # Helper classes for PrestaShop CMS
-Full documented helper classes for PrestaShop CMS (8, 1.7, 1.6, 1.5).
+Full documented helper classes for PrestaShop CMS (9, 8, 1.7, 1.6, 1.5).
 With these helpers some programming tasks becomes more simple and done faster.
 [The library homepage][5].
 
@@ -13,6 +13,7 @@ With these helpers some programming tasks becomes more simple and done faster.
 - HtaccessHelper
 - LogHelper
 - ModuleHelper
+- NumberHelper
 - ObjectHelper
 - SecurityHelper
 - StringHelper
